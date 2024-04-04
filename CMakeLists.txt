@@ -1,7 +1,17 @@
 cmake_minimum_required(VERSION 3.26)
 
 project(game)
-add_executable(game main.cpp)
+add_executable(game main.cpp
+        texture.cpp
+        texture.h
+        tile.cpp
+        tile.h
+        collision.cpp
+        collision.h
+        dot.cpp
+        dot.h
+        map.cpp
+        map.h)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
