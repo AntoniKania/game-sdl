@@ -1,4 +1,4 @@
-OBJS = main.cpp texture.cpp tile.cpp collision.cpp dot.cpp map.cpp
+OBJS = main.cpp texture.cpp tile.cpp collision.cpp dot.cpp map.cpp camera.cpp
 
 CC = g++
 

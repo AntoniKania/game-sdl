@@ -5,6 +5,7 @@
 #include "texture.h"
 #include "dot.h"
 #include "map.h"
+#include "camera.h"
 
 const int SCREEN_WIDTH = 960;
 const int SCREEN_HEIGHT = 640;
@@ -110,8 +111,7 @@ int main(int argc, char* args[]) {
             SDL_Event e;
 
             Dot dot = Dot(&gDotTexture);
-
-            SDL_Rect camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+            Camera camera;
 
             while (!quit) {
                 while (SDL_PollEvent( &e) != 0) {
@@ -121,13 +121,12 @@ int main(int argc, char* args[]) {
 
                     dot.handleEvent(e);
                 }
-
-                dot.move(map.getTiles(), SCREEN_WIDTH, SCREEN_HEIGHT);
-
                 SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
                 SDL_RenderClear(renderer);
 
-                map.draw();
+                dot.move(map.getTiles(), 3840, 2560);
+                camera.setCamera(dot);
+                map.draw(&camera);
                 dot.render(camera.x, camera.y);
 
                 SDL_RenderPresent(renderer);

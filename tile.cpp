@@ -1,7 +1,7 @@
 #include "tile.h"
 
-void Tile::render(int x, int y) {
-    texture->render(x, y);
+void Tile::render(int x, int y, SDL_Rect* clip) {
+    texture->render(x, y, clip);
 }
 
 TileType Tile::getType() {
@@ -29,4 +29,8 @@ int Tile::getWidth() const {
 
 int Tile::getHeight() const {
     return texture->getHeight();
+}
+
+SDL_Rect Tile::getRect() const {
+    return SDL_Rect{x, y, texture->getWidth(), texture->getHeight()};
 }
