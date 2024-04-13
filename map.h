@@ -12,10 +12,13 @@ public:
 
     void draw(Camera* camera);
     void load(Texture* grayTexture, Texture* redTexture);
-    std::vector<Tile> getTiles();
+    Tile getTileAbove(const Tile& tile);
+    Tile getTileBelow(const Tile& tile);
+    Tile getTileToRight(const Tile& tile);
+    Tile getTileToLeft(const Tile& tile);
+    std::vector<Tile> tiles;
 private:
     std::vector<int> tilesMap;
-    std::vector<Tile> tiles;
     std::vector<Tile> visibleTiles;
 
 };

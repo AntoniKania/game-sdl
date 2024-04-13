@@ -6,6 +6,7 @@
 #include "dot.h"
 #include "map.h"
 #include "camera.h"
+#include "enemy.h"
 
 const int SCREEN_WIDTH = 960;
 const int SCREEN_HEIGHT = 640;
@@ -23,6 +24,7 @@ SDL_Renderer* renderer = NULL;
 Texture gDotTexture;
 Texture gGrayTexture;
 Texture gRedTexture;
+Texture gEnemyTexture;
 Map map;
 
 bool init() {
@@ -56,6 +58,7 @@ bool init() {
                 gRedTexture.setRenderer(renderer);
                 gGrayTexture.setRenderer(renderer);
                 gDotTexture.setRenderer(renderer);
+                gEnemyTexture.setRenderer(renderer);
             }
         }
     }
@@ -72,12 +75,17 @@ bool loadMedia() {
     }
 
     if (!gGrayTexture.loadFromFile("assets/gray.png")) {
-        printf("Failed to load background texture!\n");
+        printf("Failed to load gray texture!\n");
         success = false;
     }
 
     if (!gRedTexture.loadFromFile("assets/red.png")) {
-        printf("Failed to load background texture!\n");
+        printf("Failed to load red texture!\n");
+        success = false;
+    }
+
+    if (!gEnemyTexture.loadFromFile("assets/enemy.png")) {
+        printf("Failed to load enemy texture!\n");
         success = false;
     }
     map.load(&gGrayTexture, &gRedTexture);
@@ -89,6 +97,7 @@ void close() {
     gDotTexture.free();
     gGrayTexture.free();
     gRedTexture.free();
+    gEnemyTexture.free();
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(gWindow);
@@ -111,6 +120,8 @@ int main(int argc, char* args[]) {
             SDL_Event e;
 
             Dot dot = Dot(&gDotTexture);
+            Path pathEnemy1 = Path(map);
+            Enemy enemy = Enemy(&gEnemyTexture, &pathEnemy1);
             Camera camera;
 
             while (!quit) {
@@ -125,8 +136,10 @@ int main(int argc, char* args[]) {
                 SDL_RenderClear(renderer);
 
                 dot.move(map.getTiles(), 3840, 2560);
+                enemy.move();
                 camera.setCamera(dot);
                 map.draw(&camera);
+                enemy.render(camera.x, camera.y);
                 dot.render(camera.x, camera.y);
 
                 SDL_RenderPresent(renderer);

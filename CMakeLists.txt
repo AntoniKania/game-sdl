@@ -13,7 +13,11 @@ add_executable(game main.cpp
         map.cpp
         map.h
         camera.cpp
-        camera.h)
+        camera.h
+        enemy.cpp
+        enemy.h
+        path.cpp
+        path.h)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 

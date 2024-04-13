@@ -6,7 +6,8 @@
 
 enum TileType {
     WALL,
-    GROUND
+    GROUND,
+    ENEMY_PATH
 };
 
 class Tile {
@@ -20,6 +21,8 @@ public:
     int getWidth() const;
     int getHeight() const;
     SDL_Rect getRect() const;
+    bool operator==(const Tile&) const;
+    bool operator!=(const Tile&) const;
 private:
     TileType type;
     Texture* texture;

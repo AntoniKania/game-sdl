@@ -34,3 +34,11 @@ int Tile::getHeight() const {
 SDL_Rect Tile::getRect() const {
     return SDL_Rect{x, y, texture->getWidth(), texture->getHeight()};
 }
+
+bool Tile::operator==(const Tile & other) const {
+    return x == other.x && y == other.y;
+}
+
+bool Tile::operator!=(const Tile & other) const {
+    return !(*this == other);
+}
