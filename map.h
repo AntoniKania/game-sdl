@@ -12,6 +12,7 @@ public:
 
     void draw(Camera* camera);
     void load(Texture* grayTexture, Texture* redTexture);
+    std::vector<Tile> getTiles() const;
     Tile getTileAbove(const Tile& tile);
     Tile getTileBelow(const Tile& tile);
     Tile getTileToRight(const Tile& tile);
