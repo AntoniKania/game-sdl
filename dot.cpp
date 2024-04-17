@@ -38,8 +38,7 @@ void Dot::move(const std::vector<Tile>& tiles, const int& screenWidth, const int
 
     mPosY += mVelY;
 
-    if ((mPosY < 0) || (mPosY + DOT_HEIGHT > screenHeight || isColliding(tiles)))
-    {
+    if ((mPosY < 0) || (mPosY + DOT_HEIGHT > screenHeight || isColliding(tiles))) {
         mPosY -= mVelY;
     }
 }
@@ -59,11 +58,11 @@ void Dot::render(int camX, int camY) {
     texture->render(mPosX - camX, mPosY - camY);
 }
 
-int Dot::getPosX() {
+int Dot::getPosX() const {
     return mPosX;
 }
 
-int Dot::getPosY() {
+int Dot::getPosY() const {
     return mPosY;
 }
 

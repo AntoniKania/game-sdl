@@ -125,10 +125,6 @@ Map::~Map() {
     }
 }
 
-std::vector<Tile> Map::getTiles() const {
-    return tiles;
-}
-
 Tile Map::getTileAbove(const Tile& tile) {
     long tileIndex = distance(tiles.begin(), find(tiles.begin(), tiles.end(), tile));
 
@@ -141,7 +137,7 @@ Tile Map::getTileAbove(const Tile& tile) {
 
 Tile Map::getTileBelow(const Tile& tile) {
     long tileIndex = distance(tiles.begin(), find(tiles.begin(), tiles.end(), tile));
-    if (tileIndex + MAP_WIDTH > tiles.size() + 1) {
+    if (tileIndex + MAP_WIDTH >= tiles.size()) {
         return tile;
     }
 
@@ -150,7 +146,7 @@ Tile Map::getTileBelow(const Tile& tile) {
 
 Tile Map::getTileToRight(const Tile& tile) {
     long tileIndex = distance(tiles.begin(), find(tiles.begin(), tiles.end(), tile));
-    if (tileIndex + 1 > tiles.size() + 1) {
+    if (tileIndex + 1 >= tiles.size()) {
         return tile;
     }
 
@@ -164,4 +160,8 @@ Tile Map::getTileToLeft(const Tile& tile) {
     }
 
     return tiles.at(tileIndex - 1);
+}
+
+std::vector<Tile> Map::getTiles() const {
+    return tiles;
 }

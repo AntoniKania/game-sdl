@@ -21,8 +21,8 @@ public:
 
     void render(int camX, int camY);
 
-    int getPosX();
-    int getPosY();
+    int getPosX() const;
+    int getPosY() const;
 
 private:
     int mPosX, mPosY;

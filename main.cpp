@@ -136,7 +136,7 @@ int main(int argc, char* args[]) {
                 SDL_RenderClear(renderer);
 
                 dot.move(map.getTiles(), 3840, 2560);
-                enemy.move();
+                enemy.move(dot, map);
                 camera.setCamera(dot);
                 map.draw(&camera);
                 enemy.render(camera.x, camera.y);

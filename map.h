@@ -18,6 +18,7 @@ public:
     Tile getTileToRight(const Tile& tile);
     Tile getTileToLeft(const Tile& tile);
     std::vector<Tile> tiles;
+    static const int TILE_SIZE = 32;
 private:
     std::vector<int> tilesMap;
     std::vector<Tile> visibleTiles;
