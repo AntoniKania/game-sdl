@@ -14,20 +14,19 @@ void Enemy::move(const Dot &dot, const Map &map) {
     auto playerCoordinates = std::make_pair(dot.getPosX() + dot.DOT_WIDTH / 2,
                                             dot.getPosY() + dot.DOT_HEIGHT / 2);
 
-    moveEnemyOnPath(enemyCoordinates);
-    playerIsVisible(enemyCoordinates, playerCoordinates, map);
-//    if (playerIsCloseEnough(enemyCoordinates, playerCoordinates) &&
-//        playerIsVisible(enemyCoordinates, playerCoordinates, map)) {
-//
-//    } else {
-//        moveEnemyOnPath(enemyCoordinates);
-//    }
+    if (playerIsCloseEnough(enemyCoordinates, playerCoordinates) &&
+        playerIsVisible(enemyCoordinates, playerCoordinates, map)
+        ) {
+        moveEnemyTowardPlayer(enemyCoordinates, playerCoordinates);
+    } else {
+        moveEnemyOnPath(enemyCoordinates);
+    }
 }
 
 bool Enemy::playerIsCloseEnough(const std::pair<int, int> &enemyCoordinates,
                                 const std::pair<int, int> &playerCoordinates) {
-    return abs(enemyCoordinates.first - playerCoordinates.first) < 300 &&
-           abs(enemyCoordinates.second - playerCoordinates.second) < 300;
+    return abs(enemyCoordinates.first - playerCoordinates.first) < 500 &&
+           abs(enemyCoordinates.second - playerCoordinates.second) < 500;
 }
 
 bool Enemy::playerIsVisible(const std::pair<int, int> &enemyCoordinate,
@@ -122,6 +121,23 @@ void Enemy::moveEnemyOnPath(const std::pair<int, int> &enemyCoordinate) {
     if (pathY < enemyY) {
         mPosY -= ENEMY_VEL;
     } else if (pathY > enemyY) {
+        mPosY += ENEMY_VEL;
+    }
+}
+
+void Enemy::moveEnemyTowardPlayer(const std::pair<int, int> &enemyCoordinate, const std::pair<int, int> &playerCoordinate) {
+    int enemyX = enemyCoordinate.first;
+    int playerX = playerCoordinate.first;
+    if (playerX < enemyX) {
+        mPosX -= ENEMY_VEL;
+    } else if (playerX > enemyX) {
+        mPosX += ENEMY_VEL;
+    }
+    int playerY = playerCoordinate.second;
+    int enemyY = enemyCoordinate.second;
+    if (playerY < enemyY) {
+        mPosY -= ENEMY_VEL;
+    } else if (playerY > enemyY) {
         mPosY += ENEMY_VEL;
     }
 }

@@ -28,6 +28,8 @@ private:
 
     bool
     playerIsVisible(const std::pair<int, int> &enemyCoordinate, const std::pair<int, int> &playerCoordinates, Map map);
+
+    void moveEnemyTowardPlayer(const std::pair<int, int> &enemyCoordinate, const std::pair<int, int> &playerCoordinate);
 };
 
 
