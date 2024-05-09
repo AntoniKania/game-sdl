@@ -17,7 +17,12 @@ add_executable(game main.cpp
         enemy.cpp
         enemy.h
         path.cpp
-        path.h)
+        path.h
+        shotgun.cpp
+        shotgun.h
+        vector2.h
+        vector2.cpp
+)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 

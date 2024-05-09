@@ -23,10 +23,12 @@ public:
     SDL_Rect getRect() const;
     bool operator==(const Tile&) const;
     bool operator!=(const Tile&) const;
+    void changeColor();
 private:
     TileType type;
     Texture* texture;
     int x, y;
+    bool colorChanged;
 };
 
 

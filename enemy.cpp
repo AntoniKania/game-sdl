@@ -1,21 +1,28 @@
 #include "enemy.h"
 
-Enemy::Enemy(Texture *texture, Path *path) {
+Enemy::Enemy(Texture *texture, Map *map, Path *path) {
     this->texture = texture;
     this->path = path;
     Tile &tile = path->getPathNode()->tile;
     this->mPosX = tile.getX() + tile.getWidth() / 2 - texture->getWidth() / 2;
     this->mPosY = tile.getY() + tile.getHeight() / 2 - texture->getHeight() / 2;
+    this->isAlive = true;
+    this->map = map;
 }
 
 void Enemy::move(const Dot &dot, const Map &map) {
+    if (!this->isAlive) {
+        return;
+    }
     auto enemyCoordinates = std::make_pair(mPosX + texture->getWidth() / 2,
                                           mPosY + texture->getHeight() / 2);
     auto playerCoordinates = std::make_pair(dot.getPosX() + dot.DOT_WIDTH / 2,
                                             dot.getPosY() + dot.DOT_HEIGHT / 2);
 
-    if (playerIsCloseEnough(enemyCoordinates, playerCoordinates) &&
-        playerIsVisible(enemyCoordinates, playerCoordinates, map)
+    if (playerIsCloseEnough(enemyCoordinates, playerCoordinates) ||
+            this->map->isWallBetweenInStraightLine(Vector2(playerCoordinates.first, playerCoordinates.second),
+                                                   Vector2(enemyCoordinates.first, enemyCoordinates.second))
+//            isPlayerVisible(enemyCoordinates, playerCoordinates, map)
         ) {
         moveEnemyTowardPlayer(enemyCoordinates, playerCoordinates);
     } else {
@@ -29,9 +36,9 @@ bool Enemy::playerIsCloseEnough(const std::pair<int, int> &enemyCoordinates,
            abs(enemyCoordinates.second - playerCoordinates.second) < 500;
 }
 
-bool Enemy::playerIsVisible(const std::pair<int, int> &enemyCoordinate,
-                                const std::pair<int, int> &playerCoordinates,
-                                Map map) {
+bool Enemy::isPlayerVisible(const std::pair<int, int> &enemyCoordinate,
+                            const std::pair<int, int> &playerCoordinates,
+                            Map map) {
     auto xStart = enemyCoordinate.first;
     auto yStart = enemyCoordinate.second;
     auto xEnd = playerCoordinates.first;
@@ -144,4 +151,8 @@ void Enemy::moveEnemyTowardPlayer(const std::pair<int, int> &enemyCoordinate, co
 
 void Enemy::render(int camX, int camY) {
     texture->render(mPosX - camX, mPosY - camY);
+}
+
+void Enemy::kill() {
+    this->isAlive = false;
 }

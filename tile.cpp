@@ -13,6 +13,7 @@ Tile::Tile(Texture* texture, TileType type, int x, int y) {
     this->type = type;
     this->x = x;
     this->y = y;
+    this->colorChanged = false;
 }
 
 int Tile::getX() const {
@@ -41,4 +42,8 @@ bool Tile::operator==(const Tile & other) const {
 
 bool Tile::operator!=(const Tile & other) const {
     return !(*this == other);
+}
+
+void Tile::changeColor() {
+    this->colorChanged = true;
 }

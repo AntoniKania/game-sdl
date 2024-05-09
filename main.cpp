@@ -88,7 +88,7 @@ bool loadMedia() {
         printf("Failed to load enemy texture!\n");
         success = false;
     }
-    map.load(&gGrayTexture, &gRedTexture);
+    map.load(&gGrayTexture, &gRedTexture, renderer);
 
     return success;
 }
@@ -121,7 +121,7 @@ int main(int argc, char* args[]) {
 
             Dot dot = Dot(&gDotTexture);
             Path pathEnemy1 = Path(map);
-            Enemy enemy = Enemy(&gEnemyTexture, &pathEnemy1);
+            Enemy enemy = Enemy(&gEnemyTexture, &map, &pathEnemy1);
             Camera camera;
 
             while (!quit) {
@@ -135,10 +135,10 @@ int main(int argc, char* args[]) {
                 SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
                 SDL_RenderClear(renderer);
 
+                map.draw(&camera);
                 dot.move(map.getTiles(), 3840, 2560);
                 enemy.move(dot, map);
                 camera.setCamera(dot);
-                map.draw(&camera);
                 enemy.render(camera.x, camera.y);
                 dot.render(camera.x, camera.y);
 

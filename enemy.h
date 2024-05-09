@@ -3,31 +3,31 @@
 
 
 #include "texture.h"
-#include "tile.h"
+#include "map.h"
 #include "path.h"
+#include "vector2.h"
 
 class Enemy {
 public:
-    Enemy(Texture* texture, Path* path);
+    bool isAlive;
+    Enemy(Texture* texture, Map* map, Path* path);
     void render(int camX, int camY);
     void move(const Dot &dot, const Map &map);
+    void kill();
 private:
     static const int ENEMY_VEL = 2;
     int mPosX, mPosY;
     Texture* texture;
     Path* path;
+    Map* map;
 
     void moveEnemyOnPath(const std::pair<int, int> &enemyCoordinate);
-
-    bool
-    playerIsCloseEnough(const std::pair<int *, int *> &enemyCoordinate,
-                        const std::pair<int *, int *> &playerCoordinates) const;
 
     static bool
     playerIsCloseEnough(const std::pair<int, int> &enemyCoordinates, const std::pair<int, int> &playerCoordinates) ;
 
     bool
-    playerIsVisible(const std::pair<int, int> &enemyCoordinate, const std::pair<int, int> &playerCoordinates, Map map);
+    isPlayerVisible(const std::pair<int, int> &enemyCoordinate, const std::pair<int, int> &playerCoordinates, Map map);
 
     void moveEnemyTowardPlayer(const std::pair<int, int> &enemyCoordinate, const std::pair<int, int> &playerCoordinate);
 };
