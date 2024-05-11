@@ -2,13 +2,13 @@
 #define GAME_CAMERA_H
 
 #include <SDL2/SDL.h>
-#include "dot.h"
+#include "player.h"
 
 class Camera {
 public:
     Camera();
 
-    void setCamera(Dot dot);
+    void setCamera(Player player);
     int x;
     int y;
     int SCREEN_WIDTH, SCREEN_HEIGHT;

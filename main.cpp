@@ -3,10 +3,12 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include "texture.h"
-#include "dot.h"
+#include "player.h"
 #include "map.h"
 #include "camera.h"
 #include "enemy.h"
+#include "shotgun.h"
+#include "cursor.h"
 
 const int SCREEN_WIDTH = 960;
 const int SCREEN_HEIGHT = 640;
@@ -25,6 +27,7 @@ Texture gDotTexture;
 Texture gGrayTexture;
 Texture gRedTexture;
 Texture gEnemyTexture;
+Texture gCursorTexture;
 Map map;
 
 bool init() {
@@ -59,6 +62,7 @@ bool init() {
                 gGrayTexture.setRenderer(renderer);
                 gDotTexture.setRenderer(renderer);
                 gEnemyTexture.setRenderer(renderer);
+                gCursorTexture.setRenderer(renderer);
             }
         }
     }
@@ -86,6 +90,11 @@ bool loadMedia() {
 
     if (!gEnemyTexture.loadFromFile("assets/enemy.png")) {
         printf("Failed to load enemy texture!\n");
+        success = false;
+    }
+
+    if (!gCursorTexture.loadFromFile("assets/cursor.png")) {
+        printf("Failed to load cursor texture!\n");
         success = false;
     }
     map.load(&gGrayTexture, &gRedTexture, renderer);
@@ -118,11 +127,15 @@ int main(int argc, char* args[]) {
             bool quit = false;
 
             SDL_Event e;
+            SDL_ShowCursor(0);
 
-            Dot dot = Dot(&gDotTexture);
             Path pathEnemy1 = Path(map);
-            Enemy enemy = Enemy(&gEnemyTexture, &map, &pathEnemy1);
+            Enemy enemy1 = Enemy(&gEnemyTexture, &map, &pathEnemy1);
+            std::vector<Enemy*> enemies = {&enemy1};
+            Player player = Player(&gDotTexture);
             Camera camera;
+            Shotgun shotgun = Shotgun(&enemies, &player, map, &camera);
+            auto cursor = Cursor(&gCursorTexture);
 
             while (!quit) {
                 while (SDL_PollEvent( &e) != 0) {
@@ -130,18 +143,22 @@ int main(int argc, char* args[]) {
                         quit = true;
                     }
 
-                    dot.handleEvent(e);
+                    player.handleEvent(e);
+                    shotgun.handleEvent(e);
                 }
                 SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
                 SDL_RenderClear(renderer);
 
                 map.draw(&camera);
-                dot.move(map.getTiles(), 3840, 2560);
-                enemy.move(dot, map);
-                camera.setCamera(dot);
-                enemy.render(camera.x, camera.y);
-                dot.render(camera.x, camera.y);
+                player.move(map.getTiles(), 3840, 2560);
+                for (auto enemy : enemies) {
+                    enemy->move(player);
+                    enemy->render(camera.x, camera.y);
+                }
+                camera.setCamera(player);
+                player.render(camera.x, camera.y);
 
+                cursor.render();
                 SDL_RenderPresent(renderer);
             }
         }

@@ -1,7 +1,7 @@
-#include "dot.h"
+#include "player.h"
 #include "collision.h"
 
-Dot::Dot() {
+Player::Player() {
     mPosX = 0;
     mPosY = 0;
 
@@ -9,27 +9,27 @@ Dot::Dot() {
     mVelY = 0;
 }
 
-void Dot::handleEvent(SDL_Event& e) {
+void Player::handleEvent(SDL_Event& e) {
     if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
         switch(e.key.keysym.sym) {
-            case SDLK_UP: mVelY -= DOT_VEL; break;
-            case SDLK_DOWN: mVelY += DOT_VEL; break;
-            case SDLK_LEFT: mVelX -= DOT_VEL; break;
-            case SDLK_RIGHT: mVelX += DOT_VEL; break;
+            case SDLK_w: mVelY -= DOT_VEL; break;
+            case SDLK_s: mVelY += DOT_VEL; break;
+            case SDLK_a: mVelX -= DOT_VEL; break;
+            case SDLK_d: mVelX += DOT_VEL; break;
         }
     }
     else if (e.type == SDL_KEYUP && e.key.repeat == 0) {
         switch(e.key.keysym.sym)
         {
-            case SDLK_UP: mVelY += DOT_VEL; break;
-            case SDLK_DOWN: mVelY -= DOT_VEL; break;
-            case SDLK_LEFT: mVelX += DOT_VEL; break;
-            case SDLK_RIGHT: mVelX -= DOT_VEL; break;
+            case SDLK_w: mVelY += DOT_VEL; break;
+            case SDLK_s: mVelY -= DOT_VEL; break;
+            case SDLK_a: mVelX += DOT_VEL; break;
+            case SDLK_d: mVelX -= DOT_VEL; break;
         }
     }
 }
 
-void Dot::move(const std::vector<Tile>& tiles, const int& screenWidth, const int& screenHeight) {
+void Player::move(const std::vector<Tile>& tiles, const int& screenWidth, const int& screenHeight) {
     mPosX += mVelX;
 
     if ((mPosX < 0) || (mPosX + DOT_WIDTH > screenWidth || isColliding(tiles))) {
@@ -43,7 +43,7 @@ void Dot::move(const std::vector<Tile>& tiles, const int& screenWidth, const int
     }
 }
 
-bool Dot::isColliding(const std::vector<Tile>& tiles) {
+bool Player::isColliding(const std::vector<Tile>& tiles) {
     auto dotRect = SDL_Rect {mPosX, mPosY, DOT_WIDTH, DOT_HEIGHT};
     for (auto tile : tiles) {
         auto tileRectangle = SDL_Rect{tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight()};
@@ -54,19 +54,19 @@ bool Dot::isColliding(const std::vector<Tile>& tiles) {
     return false;
 }
 
-void Dot::render(int camX, int camY) {
+void Player::render(int camX, int camY) {
     texture->render(mPosX - camX, mPosY - camY);
 }
 
-int Dot::getPosX() const {
+int Player::getPosX() const {
     return mPosX;
 }
 
-int Dot::getPosY() const {
+int Player::getPosY() const {
     return mPosY;
 }
 
-Dot::Dot(Texture *texture) {
+Player::Player(Texture *texture) {
     this->texture = texture;
     mPosX = 0;
     mPosY = 0;

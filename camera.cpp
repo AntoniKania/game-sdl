@@ -7,11 +7,11 @@ Camera::Camera() {
     SCREEN_WIDTH = 960;
 }
 
-void Camera::setCamera(Dot dot) {
+void Camera::setCamera(Player player) {
     int LEVEL_WIDTH = 3840;
     int LEVEL_HEIGHT = 2560;
-    x = ( dot.getPosX() + Dot::DOT_WIDTH / 2 ) - SCREEN_WIDTH / 2;
-    y = ( dot.getPosY() + Dot::DOT_HEIGHT / 2 ) - SCREEN_HEIGHT / 2;
+    x = (player.getPosX() + Player::DOT_WIDTH / 2 ) - SCREEN_WIDTH / 2;
+    y = (player.getPosY() + Player::DOT_HEIGHT / 2 ) - SCREEN_HEIGHT / 2;
 
     if (x < 0) {
         x = 0;

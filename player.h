@@ -1,19 +1,21 @@
-#ifndef GAME_DOT_H
-#define GAME_DOT_H
+#ifndef GAME_PLAYER_H
+#define GAME_PLAYER_H
 
 #include "tile.h"
+#include "vector2.h"
+//#include "shotgun.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-class Dot {
+class Player {
 public:
     static const int DOT_WIDTH = 32;
     static const int DOT_HEIGHT = 32;
 
     static const int DOT_VEL = 10;
 
-    Dot();
-    explicit Dot(Texture* texture);
+    Player();
+    explicit Player(Texture* texture);
 
     void handleEvent(SDL_Event& e);
 
@@ -32,4 +34,4 @@ private:
     bool isColliding(const std::vector<Tile>& tiles);
 };
 
-#endif //GAME_DOT_H
+#endif //GAME_PLAYER_H

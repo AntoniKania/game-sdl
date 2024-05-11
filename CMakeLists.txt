@@ -8,8 +8,8 @@ add_executable(game main.cpp
         tile.h
         collision.cpp
         collision.h
-        dot.cpp
-        dot.h
+        player.cpp
+        player.h
         map.cpp
         map.h
         camera.cpp
@@ -22,6 +22,8 @@ add_executable(game main.cpp
         shotgun.h
         vector2.h
         vector2.cpp
+        cursor.cpp
+        cursor.h
 )
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")

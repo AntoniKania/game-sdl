@@ -201,11 +201,7 @@ bool Map::isWallBetweenInStraightLine(const Vector2 &startPos, const Vector2 &en
         tForNextBorderY = distanceToFirstEdgeY / tileHeight * tForOneY;
     }
     while (tValue < 1) {
-        SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-        const SDL_Rect &rect = SDL_Rect{currentTile.getX(), currentTile.getY(), TILE_SIZE, TILE_SIZE};
-        SDL_RenderDrawRect(renderer, &rect);
         if (currentTile.getType() == TileType::WALL) {
-            printf("Player not visible\n");
             return false;
         }
         if (tForNextBorderX <= tForNextBorderY) {
@@ -226,7 +222,6 @@ bool Map::isWallBetweenInStraightLine(const Vector2 &startPos, const Vector2 &en
             }
         }
     }
-    printf("Player visible!!!!!!!!!!!!!!\n");
     return true;
 }
 

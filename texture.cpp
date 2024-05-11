@@ -70,3 +70,7 @@ void Texture::free() {
         textureHeight = 0;
     }
 }
+
+SDL_Texture *Texture::getSDLTexture() {
+    return this->texture;
+}

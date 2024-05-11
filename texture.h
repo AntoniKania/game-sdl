@@ -21,7 +21,7 @@ public:
     void setRenderer(SDL_Renderer *sdlRenderer);
     int getWidth();
     int getHeight();
-
+    SDL_Texture* getSDLTexture();
 private:
     SDL_Renderer* renderer;
     SDL_Texture* texture;
