@@ -9,6 +9,7 @@
 #include "enemy.h"
 #include "shotgun.h"
 #include "cursor.h"
+#include "blood_effect.h"
 
 const int SCREEN_WIDTH = 960;
 const int SCREEN_HEIGHT = 640;
@@ -28,6 +29,7 @@ Texture gGrayTexture;
 Texture gRedTexture;
 Texture gEnemyTexture;
 Texture gCursorTexture;
+Texture gBloodPuddleSprite;
 Map map;
 
 bool init() {
@@ -63,6 +65,7 @@ bool init() {
                 gDotTexture.setRenderer(renderer);
                 gEnemyTexture.setRenderer(renderer);
                 gCursorTexture.setRenderer(renderer);
+                gBloodPuddleSprite.setRenderer(renderer);
             }
         }
     }
@@ -97,6 +100,12 @@ bool loadMedia() {
         printf("Failed to load cursor texture!\n");
         success = false;
     }
+
+    if (!gBloodPuddleSprite.loadFromFile("assets/blood_puddle_sprite.png")) {
+        printf("Failed to load blood_puddle_sprite texture!\n");
+        success = false;
+    }
+
     map.load(&gGrayTexture, &gRedTexture, renderer);
 
     return success;
@@ -129,8 +138,9 @@ int main(int argc, char* args[]) {
             SDL_Event e;
             SDL_ShowCursor(0);
 
+            BloodEffectCollection bloodEffectCollection = BloodEffectCollection(&gBloodPuddleSprite);
             Path pathEnemy1 = Path(map);
-            Enemy enemy1 = Enemy(&gEnemyTexture, &map, &pathEnemy1);
+            Enemy enemy1 = Enemy(&gEnemyTexture, &map, &pathEnemy1, &bloodEffectCollection);
             std::vector<Enemy*> enemies = {&enemy1};
             Player player = Player(&gDotTexture);
             Camera camera;
@@ -156,6 +166,7 @@ int main(int argc, char* args[]) {
                     enemy->render(camera.x, camera.y);
                 }
                 camera.setCamera(player);
+                bloodEffectCollection.renderBloodEffects(camera.x, camera.y);
                 player.render(camera.x, camera.y);
 
                 cursor.render();

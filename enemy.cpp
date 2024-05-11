@@ -1,6 +1,6 @@
 #include "enemy.h"
 
-Enemy::Enemy(Texture *texture, Map *map, Path *path) {
+Enemy::Enemy(Texture *texture, Map *map, Path *path, BloodEffectCollection *bloodEffectCollection) {
     this->texture = texture;
     this->path = path;
     Tile &tile = path->getPathNode()->tile;
@@ -8,6 +8,7 @@ Enemy::Enemy(Texture *texture, Map *map, Path *path) {
     this->mPosY = tile.getY() + tile.getHeight() / 2 - texture->getHeight() / 2;
     this->isAlive = true;
     this->map = map;
+    this->bloodEffectCollection = bloodEffectCollection;
 }
 
 void Enemy::move(const Player &dot) {
@@ -81,6 +82,7 @@ void Enemy::render(int camX, int camY) {
 
 void Enemy::kill() {
     this->isAlive = false;
+    bloodEffectCollection->createBloodEffect(mPosX, mPosY);
 }
 
 int Enemy::getPosY() {

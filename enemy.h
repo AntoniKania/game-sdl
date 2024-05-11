@@ -7,11 +7,12 @@
 #include "map.h"
 #include "path.h"
 #include "vector2.h"
+#include "blood_effect.h"
 
 class Enemy {
 public:
     bool isAlive;
-    Enemy(Texture* texture, Map* map, Path* path);
+    Enemy(Texture* texture, Map *map, Path *path, BloodEffectCollection *bloodEffectCollection);
     void render(int camX, int camY);
     void move(const Player &dot);
     void kill();
@@ -23,6 +24,7 @@ private:
     Texture* texture;
     Path* path;
     Map* map;
+    BloodEffectCollection* bloodEffectCollection;
 
     void moveEnemyOnPath(const std::pair<int, int> &enemyCoordinate);
 

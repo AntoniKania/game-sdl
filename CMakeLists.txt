@@ -24,6 +24,8 @@ add_executable(game main.cpp
         vector2.cpp
         cursor.cpp
         cursor.h
+        blood_effect.cpp
+        blood_effect.h
 )
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
