@@ -159,14 +159,14 @@ int main(int argc, char* args[]) {
                 SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
                 SDL_RenderClear(renderer);
 
+                camera.setCamera(player);
                 map.draw(&camera);
+                bloodEffectCollection.renderBloodEffects(camera.x, camera.y);
                 player.move(map.getTiles(), 3840, 2560);
                 for (auto enemy : enemies) {
                     enemy->move(player);
                     enemy->render(camera.x, camera.y);
                 }
-                camera.setCamera(player);
-                bloodEffectCollection.renderBloodEffects(camera.x, camera.y);
                 player.render(camera.x, camera.y);
 
                 cursor.render();

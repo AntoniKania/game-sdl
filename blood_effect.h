@@ -16,12 +16,12 @@ private:
     int frame;
     int clipToRender;
 
-    void setStripes(Texture *texture);
+    void setStripes(int textureWidth, int textureHeight);
 };
 
 class BloodEffectCollection {
 public:
-    BloodEffectCollection(Texture* texture);
+    explicit BloodEffectCollection(Texture* texture);
     void createBloodEffect(int mPosX, int mPosY);
     void renderBloodEffects(int camX, int camY);
     std::vector<BloodEffect> bloodEffects;

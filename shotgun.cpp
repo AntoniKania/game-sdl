@@ -52,12 +52,12 @@ void Shotgun::fire(const Vector2 &ptStart, const Vector2 &ptTarget) {
     m_ptVelocity = ptTarget - ptStart;
 
     for (auto enemy : *enemies) {
-        if (canKillEnemy(enemy)) {
+        if (canKillEnemy(enemy) && enemy->isAlive) {
             printf("Enemy killed!");
             enemy->kill();
         }
     }
-    removeKilledEnemies();
+//    removeKilledEnemies();
 }
 
 void Shotgun::removeKilledEnemies() {
