@@ -54,7 +54,7 @@ void Shotgun::fire(const Vector2 &ptStart, const Vector2 &ptTarget) {
     for (auto enemy : *enemies) {
         if (canKillEnemy(enemy) && enemy->isAlive) {
             printf("Enemy killed!");
-            enemy->kill();
+            enemy->kill(shooterPos.x, shooterPos.y);
         }
     }
 //    removeKilledEnemies();

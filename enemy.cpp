@@ -20,7 +20,7 @@ void Enemy::move(const Player &dot) {
     auto playerCoordinates = std::make_pair(dot.getPosX() + dot.DOT_WIDTH / 2,
                                             dot.getPosY() + dot.DOT_HEIGHT / 2);
 
-    if (playerIsCloseEnough(enemyCoordinates, playerCoordinates) ||
+    if (playerIsCloseEnough(enemyCoordinates, playerCoordinates) &&
             map->isWallBetweenInStraightLine(Vector2(playerCoordinates.first, playerCoordinates.second),
                                                    Vector2(enemyCoordinates.first, enemyCoordinates.second))
         ) {
@@ -80,15 +80,15 @@ void Enemy::render(int camX, int camY) {
     texture->render(mPosX - camX, mPosY - camY);
 }
 
-void Enemy::kill() {
-    this->isAlive = false;
-    bloodEffectCollection->createBloodEffect(mPosX, mPosY);
-}
-
 int Enemy::getPosY() {
     return this->mPosY;
 }
 
 int Enemy::getPosX() {
     return this->mPosX;
+}
+
+void Enemy::kill(int shooterPosX, int shooterPoxY) {
+    this->isAlive = false;
+    bloodEffectCollection->createBloodEffects(shooterPosX, shooterPoxY, mPosX, mPosY);
 }

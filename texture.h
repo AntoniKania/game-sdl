@@ -15,8 +15,7 @@ public:
     bool loadFromFile(std::string path);
 
     void free();
-
-    void render(int x, int y, SDL_Rect* clip = nullptr);
+    void render(int x, int y, SDL_Rect* clip = nullptr, double angle = 0.0, SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE );
 
     void setRenderer(SDL_Renderer *sdlRenderer);
     int getWidth();

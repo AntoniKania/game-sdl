@@ -15,7 +15,7 @@ public:
     Enemy(Texture* texture, Map *map, Path *path, BloodEffectCollection *bloodEffectCollection);
     void render(int camX, int camY);
     void move(const Player &dot);
-    void kill();
+    void kill(int shooterPosX, int shooterPoxY);
     int getPosX();
     int getPosY();
 private:

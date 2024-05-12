@@ -29,7 +29,7 @@ bool Texture::loadFromFile(std::string path) {
 
         newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface );
         if (newTexture == NULL) {
-            printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
+            printf("Unable to create bloodPuddleTexture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
         }
         else {
             textureWidth = loadedSurface->w;
@@ -41,17 +41,6 @@ bool Texture::loadFromFile(std::string path) {
 
     texture = newTexture;
     return texture != NULL;
-}
-
-void Texture::render(int x, int y, SDL_Rect* clip) {
-    SDL_Rect renderQuad = {x, y, textureWidth, textureHeight};
-
-    if (clip != NULL) {
-        renderQuad.w = clip->w;
-        renderQuad.h = clip->h;
-    }
-
-    SDL_RenderCopy(renderer, texture, clip, &renderQuad);
 }
 
 int Texture::getWidth() {
@@ -73,4 +62,16 @@ void Texture::free() {
 
 SDL_Texture *Texture::getSDLTexture() {
     return this->texture;
+}
+
+void Texture::render(int x, int y, SDL_Rect *clip, double angle, SDL_Point *center, SDL_RendererFlip flip) {
+    SDL_Rect renderQuad = {x, y, textureWidth, textureHeight};
+
+    if( clip != NULL )
+    {
+        renderQuad.w = clip->w;
+        renderQuad.h = clip->h;
+    }
+
+    SDL_RenderCopyEx(renderer, texture, clip, &renderQuad, angle, center, flip );
 }

@@ -30,6 +30,7 @@ Texture gRedTexture;
 Texture gEnemyTexture;
 Texture gCursorTexture;
 Texture gBloodPuddleSprite;
+Texture gBloodSpreadTexture;
 Map map;
 
 bool init() {
@@ -40,7 +41,7 @@ bool init() {
         success = false;
     } else {
         if (!SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1")) {
-            printf("Warning: Linear texture filtering not enabled!");
+            printf("Warning: Linear bloodPuddleTexture filtering not enabled!");
         }
 
         gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
@@ -66,6 +67,7 @@ bool init() {
                 gEnemyTexture.setRenderer(renderer);
                 gCursorTexture.setRenderer(renderer);
                 gBloodPuddleSprite.setRenderer(renderer);
+                gBloodSpreadTexture.setRenderer(renderer);
             }
         }
     }
@@ -77,32 +79,37 @@ bool loadMedia() {
     bool success = true;
 
     if (!gDotTexture.loadFromFile( "assets/dot.png")) {
-        printf("Failed to load dot texture!\n");
+        printf("Failed to load dot bloodPuddleTexture!\n");
         success = false;
     }
 
     if (!gGrayTexture.loadFromFile("assets/gray.png")) {
-        printf("Failed to load gray texture!\n");
+        printf("Failed to load gray bloodPuddleTexture!\n");
         success = false;
     }
 
     if (!gRedTexture.loadFromFile("assets/red.png")) {
-        printf("Failed to load red texture!\n");
+        printf("Failed to load red bloodPuddleTexture!\n");
         success = false;
     }
 
     if (!gEnemyTexture.loadFromFile("assets/enemy.png")) {
-        printf("Failed to load enemy texture!\n");
+        printf("Failed to load enemy bloodPuddleTexture!\n");
         success = false;
     }
 
     if (!gCursorTexture.loadFromFile("assets/cursor.png")) {
-        printf("Failed to load cursor texture!\n");
+        printf("Failed to load cursor bloodPuddleTexture!\n");
         success = false;
     }
 
     if (!gBloodPuddleSprite.loadFromFile("assets/blood_puddle_sprite.png")) {
-        printf("Failed to load blood_puddle_sprite texture!\n");
+        printf("Failed to load blood_puddle_sprite bloodPuddleTexture!\n");
+        success = false;
+    }
+
+    if (!gBloodSpreadTexture.loadFromFile("assets/blood_spread.png")) {
+        printf("Failed to load blood_spread bloodPuddleTexture!\n");
         success = false;
     }
 
@@ -116,6 +123,8 @@ void close() {
     gGrayTexture.free();
     gRedTexture.free();
     gEnemyTexture.free();
+    gBloodSpreadTexture.free();
+    gBloodPuddleSprite.free();
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(gWindow);
@@ -138,7 +147,7 @@ int main(int argc, char* args[]) {
             SDL_Event e;
             SDL_ShowCursor(0);
 
-            BloodEffectCollection bloodEffectCollection = BloodEffectCollection(&gBloodPuddleSprite);
+            BloodEffectCollection bloodEffectCollection = BloodEffectCollection(&gBloodPuddleSprite, &gBloodSpreadTexture);
             Path pathEnemy1 = Path(map);
             Enemy enemy1 = Enemy(&gEnemyTexture, &map, &pathEnemy1, &bloodEffectCollection);
             std::vector<Enemy*> enemies = {&enemy1};
