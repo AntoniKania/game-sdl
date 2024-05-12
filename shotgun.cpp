@@ -11,7 +11,7 @@ Shotgun::Shotgun(std::vector<Enemy *> *enemies, Player *player, const Map &map, 
 bool Shotgun::canKillEnemy(Enemy* enemy) {
     Vector2 playerPos = Vector2(player->getPosX(), player->getPosY());
     Vector2 enemyPos = Vector2(enemy->getPosX(), enemy->getPosY());
-    return map.isWallBetweenInStraightLine(playerPos, enemyPos) &&
+    return !map.isWallBetweenInStraightLine(playerPos, enemyPos) &&
             isEnemyCloseEnough(enemy) &&
             isEnemyWithinSpreadAngle(enemy);
 }

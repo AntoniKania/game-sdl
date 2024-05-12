@@ -8,19 +8,22 @@
 #include "path.h"
 #include "vector2.h"
 #include "blood_effect.h"
+#include "timer.h"
 
 class Enemy {
 public:
     bool isAlive;
     Enemy(Texture* texture, Map *map, Path *path, BloodEffectCollection *bloodEffectCollection);
     void render(int camX, int camY);
-    void move(const Player &dot);
+    bool canShootPlayer(const Player &player);
+    void move(const Player &player);
     void kill(int shooterPosX, int shooterPoxY);
     int getPosX();
     int getPosY();
 private:
     static const int ENEMY_VEL = 2;
     int mPosX, mPosY;
+    Timer timer;
     Texture* texture;
     Path* path;
     Map* map;

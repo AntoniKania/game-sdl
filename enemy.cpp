@@ -9,19 +9,20 @@ Enemy::Enemy(Texture *texture, Map *map, Path *path, BloodEffectCollection *bloo
     this->isAlive = true;
     this->map = map;
     this->bloodEffectCollection = bloodEffectCollection;
+    this->timer = Timer();
 }
 
-void Enemy::move(const Player &dot) {
-    if (!this->isAlive) {
+void Enemy::move(const Player &player) {
+    if (!this->isAlive || !player.isAlive) {
         return;
     }
     auto enemyCoordinates = std::make_pair(mPosX + texture->getWidth() / 2,
                                           mPosY + texture->getHeight() / 2);
-    auto playerCoordinates = std::make_pair(dot.getPosX() + dot.DOT_WIDTH / 2,
-                                            dot.getPosY() + dot.DOT_HEIGHT / 2);
+    auto playerCoordinates = std::make_pair(player.getPosX() + player.DOT_WIDTH / 2,
+                                            player.getPosY() + player.DOT_HEIGHT / 2);
 
     if (playerIsCloseEnough(enemyCoordinates, playerCoordinates) &&
-            map->isWallBetweenInStraightLine(Vector2(playerCoordinates.first, playerCoordinates.second),
+            !map->isWallBetweenInStraightLine(Vector2(playerCoordinates.first, playerCoordinates.second),
                                                    Vector2(enemyCoordinates.first, enemyCoordinates.second))
         ) {
         moveEnemyTowardPlayer(enemyCoordinates, playerCoordinates);
@@ -91,4 +92,28 @@ int Enemy::getPosX() {
 void Enemy::kill(int shooterPosX, int shooterPoxY) {
     this->isAlive = false;
     bloodEffectCollection->createBloodEffects(shooterPosX, shooterPoxY, mPosX, mPosY);
+}
+
+bool Enemy::canShootPlayer(const Player &player) {
+    if (!player.isAlive) {
+        return false;
+    }
+    timer.start();
+    auto enemyCoordinates = std::make_pair(mPosX + texture->getWidth() / 2,
+                                           mPosY + texture->getHeight() / 2);
+    auto playerCoordinates = std::make_pair(player.getPosX() + player.DOT_WIDTH / 2,
+                                            player.getPosY() + player.DOT_HEIGHT / 2);
+
+    if (!playerIsCloseEnough(enemyCoordinates, playerCoordinates) || map->isWallBetweenInStraightLine(
+            Vector2(playerCoordinates.first, playerCoordinates.second),
+            Vector2(enemyCoordinates.first, enemyCoordinates.second))) {
+        timer.stop();
+        return false;
+    }
+
+    if (timer.getTicks() / 1000.0f > 1.5) {
+        return true;
+    } else {
+        return false;
+    }
 }

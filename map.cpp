@@ -202,7 +202,7 @@ bool Map::isWallBetweenInStraightLine(const Vector2 &startPos, const Vector2 &en
     }
     while (tValue < 1) {
         if (currentTile.getType() == TileType::WALL) {
-            return false;
+            return true;
         }
         if (tForNextBorderX <= tForNextBorderY) {
             tValue = tForNextBorderX;
@@ -222,7 +222,7 @@ bool Map::isWallBetweenInStraightLine(const Vector2 &startPos, const Vector2 &en
             }
         }
     }
-    return true;
+    return false;
 }
 
 Tile Map::getTile(const int &posX, const int &posY) {

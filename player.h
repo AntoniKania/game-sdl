@@ -3,7 +3,7 @@
 
 #include "tile.h"
 #include "vector2.h"
-//#include "shotgun.h"
+#include "blood_effect.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
@@ -14,14 +14,13 @@ public:
 
     static const int DOT_VEL = 10;
 
-    Player();
     explicit Player(Texture* texture);
 
     void handleEvent(SDL_Event& e);
-
     void move(const std::vector<Tile>& tiles, const int& screenWidth, const int& screenHeight);
-
+    void kill(BloodEffectCollection *bloodEffectCollection, int shooterPosX, int shooterPosY);
     void render(int camX, int camY);
+    bool isAlive;
 
     int getPosX() const;
     int getPosY() const;

@@ -175,6 +175,9 @@ int main(int argc, char* args[]) {
                 for (auto enemy : enemies) {
                     enemy->move(player);
                     enemy->render(camera.x, camera.y);
+                    if (enemy->canShootPlayer(player)) {
+                        player.kill(&bloodEffectCollection, enemy->getPosX(), enemy->getPosY());
+                    }
                 }
                 player.render(camera.x, camera.y);
 

@@ -1,15 +1,10 @@
 #include "player.h"
 #include "collision.h"
 
-Player::Player() {
-    mPosX = 0;
-    mPosY = 0;
-
-    mVelX = 0;
-    mVelY = 0;
-}
-
 void Player::handleEvent(SDL_Event& e) {
+    if (!isAlive) {
+        return;
+    }
     if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
         switch(e.key.keysym.sym) {
             case SDLK_w: mVelY -= DOT_VEL; break;
@@ -73,4 +68,12 @@ Player::Player(Texture *texture) {
 
     mVelX = 0;
     mVelY = 0;
+    isAlive = true;
+}
+
+void Player::kill(BloodEffectCollection *bloodEffectCollection, int shooterPosX, int shooterPosY) {
+    mVelX = 0;
+    mVelY = 0;
+    isAlive = false;
+    bloodEffectCollection->createBloodEffects(shooterPosX, shooterPosY, mPosX, mPosY);
 }
