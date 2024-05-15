@@ -11,7 +11,7 @@ public:
     Vector2 shooterPos;
     Vector2 targetPos;
     Vector2 m_ptVelocity;
-    const int SHOOTING_DISTANCE = 500;
+    const int SHOOTING_DISTANCE = 250;
     Shotgun(std::vector<Enemy*>* enemies, Player* player, const Map& map, Camera* camera);
     void handleEvent(SDL_Event& e);
     void fire(const Vector2 &ptStart, const Vector2 &ptTarget);

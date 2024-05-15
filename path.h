@@ -18,6 +18,7 @@ private:
     PathNode* currentPathNode;
     Map map;
 
+    void setStripes(int textureWidth, int textureHeight);
     Tile getNextPathTail(const Tile& tile, const Tile& previousTile);
 };
 

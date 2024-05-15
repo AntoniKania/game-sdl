@@ -71,7 +71,6 @@ double BloodSpreadEffect::calculateAngle(int shooterPosX, int shooterPosY, int v
 
 void BloodSpreadEffect::render(int camX, int camY) {
     texture->render(mPosX - camX, mPosY - camY, nullptr, angle, &center);
-
 }
 
 void BloodEffectCollection::renderBloodEffects(int camX, int camY) {

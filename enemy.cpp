@@ -4,19 +4,23 @@ Enemy::Enemy(Texture *texture, Map *map, Path *path, BloodEffectCollection *bloo
     this->texture = texture;
     this->path = path;
     Tile &tile = path->getPathNode()->tile;
-    this->mPosX = tile.getX() + tile.getWidth() / 2 - texture->getWidth() / 2;
-    this->mPosY = tile.getY() + tile.getHeight() / 2 - texture->getHeight() / 2;
+    this->mPosX = tile.getX();
+    this->mPosY = tile.getY();
     this->isAlive = true;
     this->map = map;
     this->bloodEffectCollection = bloodEffectCollection;
-    this->timer = Timer();
+    this->shootDelayTimer = Timer();
+    this->animationTimer = Timer();
+    this->isChasingPlayer = false;
+
+    setStripes();
 }
 
 void Enemy::move(const Player &player) {
     if (!this->isAlive || !player.isAlive) {
         return;
     }
-    auto enemyCoordinates = std::make_pair(mPosX + texture->getWidth() / 2,
+    auto enemyCoordinates = std::make_pair(mPosX + ENEMY_WIDTH / 2,
                                           mPosY + texture->getHeight() / 2);
     auto playerCoordinates = std::make_pair(player.getPosX() + player.DOT_WIDTH / 2,
                                             player.getPosY() + player.DOT_HEIGHT / 2);
@@ -58,6 +62,10 @@ void Enemy::moveEnemyOnPath(const std::pair<int, int> &enemyCoordinate) {
     } else if (pathY > enemyY) {
         mPosY += ENEMY_VEL;
     }
+
+    destinationX = pathX;
+    destinationY = pathY;
+    isChasingPlayer = false;
 }
 
 void Enemy::moveEnemyTowardPlayer(const std::pair<int, int> &enemyCoordinate, const std::pair<int, int> &playerCoordinate) {
@@ -75,10 +83,17 @@ void Enemy::moveEnemyTowardPlayer(const std::pair<int, int> &enemyCoordinate, co
     } else if (playerY > enemyY) {
         mPosY += ENEMY_VEL;
     }
+
+    destinationX = playerX;
+    destinationY = playerY;
+    isChasingPlayer = true;
 }
 
 void Enemy::render(int camX, int camY) {
-    texture->render(mPosX - camX, mPosY - camY);
+    int clipToRender = getClipToRender();
+    SDL_Rect* currentClip = &gSpriteClips[ clipToRender ];
+//    auto point = SDL_Point{ mPosX - camX + ENEMY_WIDTH / 2, mPosY - camY + texture->getHeight() / 2};
+    texture->render(mPosX - camX, mPosY - camY, currentClip, calculateTextureAngle());
 }
 
 int Enemy::getPosY() {
@@ -98,8 +113,8 @@ bool Enemy::canShootPlayer(const Player &player) {
     if (!player.isAlive || !isAlive) {
         return false;
     }
-    timer.start();
-    auto enemyCoordinates = std::make_pair(mPosX + texture->getWidth() / 2,
+    shootDelayTimer.start();
+    auto enemyCoordinates = std::make_pair(mPosX + ENEMY_WIDTH / 2,
                                            mPosY + texture->getHeight() / 2);
     auto playerCoordinates = std::make_pair(player.getPosX() + player.DOT_WIDTH / 2,
                                             player.getPosY() + player.DOT_HEIGHT / 2);
@@ -107,13 +122,79 @@ bool Enemy::canShootPlayer(const Player &player) {
     if (!playerIsCloseEnough(enemyCoordinates, playerCoordinates) || map->isWallBetweenInStraightLine(
             Vector2(playerCoordinates.first, playerCoordinates.second),
             Vector2(enemyCoordinates.first, enemyCoordinates.second))) {
-        timer.stop();
+        shootDelayTimer.stop();
         return false;
     }
 
-    if (timer.getTicks() / 1000.0f > 1.5) {
+    if (shootDelayTimer.getTicks() / 1000.0f > 2) {
         return true;
     } else {
         return false;
+    }
+}
+
+void Enemy::setStripes() {
+    gSpriteClips[ 0 ].x =   0;
+    gSpriteClips[ 0 ].y =   0;
+    gSpriteClips[ 0 ].w = ENEMY_WIDTH;
+    gSpriteClips[ 0 ].h = ENEMY_HEIGHT;
+
+    gSpriteClips[ 1 ].x =  64;
+    gSpriteClips[ 1 ].y =   0;
+    gSpriteClips[ 1 ].w = ENEMY_WIDTH;
+    gSpriteClips[ 1 ].h = ENEMY_HEIGHT;
+
+    gSpriteClips[ 2 ].x = 192;
+    gSpriteClips[ 2 ].y =   0;
+    gSpriteClips[ 2 ].w = ENEMY_WIDTH;
+    gSpriteClips[ 2 ].h = ENEMY_HEIGHT;
+
+    gSpriteClips[ 3 ].x = 256;
+    gSpriteClips[ 3 ].y =   0;
+    gSpriteClips[ 3 ].w = ENEMY_WIDTH;
+    gSpriteClips[ 3 ].h = ENEMY_HEIGHT;
+}
+
+double Enemy::calculateTextureAngle() {
+    if (!isAlive) {
+        return previousAngle;
+    }
+    int dx = destinationX - mPosX - ENEMY_WIDTH / 2;
+    int dy = destinationY - mPosY - texture->getHeight() / 2;
+
+    if (dx == 0 && dy == 0) {
+        return previousAngle;
+    }
+
+    double angleRadians = atan2(dy, dx);
+    double angleDegrees = angleRadians * (180.0 / M_PI);
+
+    angleDegrees += 180.0;
+
+    while (angleDegrees < 0) {
+        angleDegrees += 360.0;
+    }
+    while (angleDegrees >= 360.0) {
+        angleDegrees -= 360.0;
+    }
+
+    previousAngle = angleDegrees;
+    return angleDegrees;
+}
+
+int Enemy::getClipToRender() {
+    if (!isAlive) {
+        return ENEMY_DEAD;
+    } else if (isChasingPlayer) {
+        return ENEMY_ATTACKING;
+    }
+    if (animationTimer.getTicks() / 1000.0f > 1.5) {
+        animationTimer.stop();
+    }
+    animationTimer.start();
+    if (animationTimer.getTicks() / 1000.0f < 0.75) {
+        return ENEMY_WALKING_1;
+    } else {
+        return ENEMY_WALKING_2;
     }
 }

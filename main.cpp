@@ -32,6 +32,7 @@ Texture gEnemyTexture;
 Texture gCursorTexture;
 Texture gBloodPuddleSprite;
 Texture gBloodSpreadTexture;
+Texture gShotgunSpreadTexture;
 Map map;
 
 bool init() {
@@ -69,6 +70,7 @@ bool init() {
                 gCursorTexture.setRenderer(renderer);
                 gBloodPuddleSprite.setRenderer(renderer);
                 gBloodSpreadTexture.setRenderer(renderer);
+                gShotgunSpreadTexture.setRenderer(renderer);
             }
         }
     }
@@ -94,7 +96,7 @@ bool loadMedia() {
         success = false;
     }
 
-    if (!gEnemyTexture.loadFromFile("assets/enemy.png")) {
+    if (!gEnemyTexture.loadFromFile("assets/deer.png")) {
         printf("Failed to load enemy bloodPuddleTexture!\n");
         success = false;
     }
@@ -111,6 +113,11 @@ bool loadMedia() {
 
     if (!gBloodSpreadTexture.loadFromFile("assets/blood_spread.png")) {
         printf("Failed to load blood_spread bloodPuddleTexture!\n");
+        success = false;
+    }
+
+    if (!gShotgunSpreadTexture.loadFromFile("assets/spread.png")) {
+        printf("Failed to load gShotgunSpreadTexture!\n");
         success = false;
     }
 
