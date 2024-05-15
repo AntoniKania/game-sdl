@@ -1,11 +1,13 @@
 #include "shotgun.h"
 
-Shotgun::Shotgun(std::vector<Enemy *> *enemies, Player *player, const Map &map, Camera *camera) {
+Shotgun::Shotgun(Texture* texture, std::vector<Enemy *> *enemies, Player *player, const Map &map, Camera *camera) {
+    this->texture = texture;
     this->camera = camera;
     this->map = map;
     this->enemies = enemies;
     this->player = player;
     this->spreadAngle = 30;
+    this->afterShotTimer = Timer();
 }
 
 bool Shotgun::canKillEnemy(Enemy* enemy) {
@@ -19,6 +21,9 @@ bool Shotgun::canKillEnemy(Enemy* enemy) {
 void Shotgun::handleEvent(SDL_Event &e) {
     if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT
     ) {
+        if (!player->isAlive) {
+            return;
+        }
         int mouseX, mouseY;
         SDL_GetMouseState(&mouseX, &mouseY);
 
@@ -51,20 +56,13 @@ void Shotgun::fire(const Vector2 &ptStart, const Vector2 &ptTarget) {
 
     m_ptVelocity = ptTarget - ptStart;
 
+    afterShotTimer.stop();
+    afterShotTimer.start();
+
     for (auto enemy : *enemies) {
         if (canKillEnemy(enemy) && enemy->isAlive) {
             printf("Enemy killed!");
             enemy->kill(shooterPos.x, shooterPos.y);
-        }
-    }
-//    removeKilledEnemies();
-}
-
-void Shotgun::removeKilledEnemies() {
-    for (int i = 0; i < enemies->size(); i++) {
-        if (!enemies->at(i)->isAlive) {
-            enemies->erase(enemies->begin() + i);
-            i--;
         }
     }
 }
@@ -106,4 +104,30 @@ bool Shotgun::isEnemyCloseEnough(Enemy *enemy) {
         printf("Enemy not close enough!\n Distance: %f\n", distance);
     }
     return closeEnough;
+}
+
+void Shotgun::render(int camX, int camY) {
+    if (afterShotTimer.getTicks() / 1000.0f == 0 || afterShotTimer.getTicks() / 1000.0f > 0.1) {
+        return;
+    } else {
+        auto point = SDL_Point{0, 64};
+        texture->render(player->getPosX() + player->WIDTH / 2 - camX, player->getPosY() + player->HEIGHT / 2 - camY - 64, nullptr, calculateTextureAngle(), &point);
+    }
+}
+
+double Shotgun::calculateTextureAngle() {
+    int dx = targetPos.x - shooterPos.x - map.TILE_SIZE / 2;
+    int dy = targetPos.y - shooterPos.y - map.TILE_SIZE / 2;
+
+    double angleRadians = atan2(dy, dx);
+    double angleDegrees = angleRadians * (180.0 / M_PI);
+
+    while (angleDegrees < 0) {
+        angleDegrees += 360.0;
+    }
+    while (angleDegrees >= 360.0) {
+        angleDegrees -= 360.0;
+    }
+
+    return angleDegrees;
 }

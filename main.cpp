@@ -133,6 +133,7 @@ void close() {
     gEnemyTexture.free();
     gBloodSpreadTexture.free();
     gBloodPuddleSprite.free();
+    gShotgunSpreadTexture.free();
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(gWindow);
@@ -165,7 +166,7 @@ int main(int argc, char* args[]) {
             std::vector<Enemy*> enemies = {&enemy1, &enemy2, &enemy3};
             Player player = Player(&gDotTexture);
             Camera camera;
-            Shotgun shotgun = Shotgun(&enemies, &player, map, &camera);
+            Shotgun shotgun = Shotgun(&gShotgunSpreadTexture, &enemies, &player, map, &camera);
             auto cursor = Cursor(&gCursorTexture);
 
             while (!quit) {
@@ -192,6 +193,7 @@ int main(int argc, char* args[]) {
                     }
                 }
                 player.render(camera.x, camera.y);
+                shotgun.render(camera.x, camera.y);
 
                 cursor.render();
                 SDL_RenderPresent(renderer);

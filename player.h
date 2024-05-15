@@ -9,8 +9,8 @@
 
 class Player {
 public:
-    static const int DOT_WIDTH = 64;
-    static const int DOT_HEIGHT = 64;
+    static const int WIDTH = 64;
+    static const int HEIGHT = 64;
 
     static const int DOT_VEL = 10;
 

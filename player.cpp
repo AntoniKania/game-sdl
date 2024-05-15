@@ -27,19 +27,19 @@ void Player::handleEvent(SDL_Event& e) {
 void Player::move(const std::vector<Tile>& tiles, const int& screenWidth, const int& screenHeight) {
     mPosX += mVelX;
 
-    if ((mPosX < 0) || (mPosX + DOT_WIDTH > screenWidth || isColliding(tiles))) {
+    if ((mPosX < 0) || (mPosX + WIDTH > screenWidth || isColliding(tiles))) {
         mPosX -= mVelX;
     }
 
     mPosY += mVelY;
 
-    if ((mPosY < 0) || (mPosY + DOT_HEIGHT > screenHeight || isColliding(tiles))) {
+    if ((mPosY < 0) || (mPosY + HEIGHT > screenHeight || isColliding(tiles))) {
         mPosY -= mVelY;
     }
 }
 
 bool Player::isColliding(const std::vector<Tile>& tiles) {
-    auto dotRect = SDL_Rect {mPosX, mPosY, DOT_WIDTH, DOT_HEIGHT};
+    auto dotRect = SDL_Rect {mPosX, mPosY, WIDTH, HEIGHT};
     for (auto tile : tiles) {
         auto tileRectangle = SDL_Rect{tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight()};
         if (tile.getType() == WALL && Collision::AABB(tileRectangle, dotRect)) {

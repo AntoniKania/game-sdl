@@ -22,8 +22,8 @@ void Enemy::move(const Player &player) {
     }
     auto enemyCoordinates = std::make_pair(mPosX + ENEMY_WIDTH / 2,
                                           mPosY + texture->getHeight() / 2);
-    auto playerCoordinates = std::make_pair(player.getPosX() + player.DOT_WIDTH / 2,
-                                            player.getPosY() + player.DOT_HEIGHT / 2);
+    auto playerCoordinates = std::make_pair(player.getPosX() + player.WIDTH / 2,
+                                            player.getPosY() + player.HEIGHT / 2);
 
     if (playerIsCloseEnough(enemyCoordinates, playerCoordinates) &&
             !map->isWallBetweenInStraightLine(Vector2(playerCoordinates.first, playerCoordinates.second),
@@ -116,8 +116,8 @@ bool Enemy::canShootPlayer(const Player &player) {
     shootDelayTimer.start();
     auto enemyCoordinates = std::make_pair(mPosX + ENEMY_WIDTH / 2,
                                            mPosY + texture->getHeight() / 2);
-    auto playerCoordinates = std::make_pair(player.getPosX() + player.DOT_WIDTH / 2,
-                                            player.getPosY() + player.DOT_HEIGHT / 2);
+    auto playerCoordinates = std::make_pair(player.getPosX() + player.WIDTH / 2,
+                                            player.getPosY() + player.HEIGHT / 2);
 
     if (!playerIsCloseEnough(enemyCoordinates, playerCoordinates) || map->isWallBetweenInStraightLine(
             Vector2(playerCoordinates.first, playerCoordinates.second),

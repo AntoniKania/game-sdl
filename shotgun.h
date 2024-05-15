@@ -12,12 +12,14 @@ public:
     Vector2 targetPos;
     Vector2 m_ptVelocity;
     const int SHOOTING_DISTANCE = 250;
-    Shotgun(std::vector<Enemy*>* enemies, Player* player, const Map& map, Camera* camera);
+    Shotgun(Texture* texture, std::vector<Enemy*>* enemies, Player* player, const Map& map, Camera* camera);
     void handleEvent(SDL_Event& e);
     void fire(const Vector2 &ptStart, const Vector2 &ptTarget);
-
+    void render(int camX, int camY);
 private:
     Camera* camera;
+    Texture* texture;
+    Timer afterShotTimer;
     Map map;
     float spreadAngle;
     float targetAngle;
@@ -30,8 +32,7 @@ private:
     bool isEnemyWithinSpreadAngle(Enemy* enemy);
     float calculateAngle(float shooterPosX, float shooterPosY, float targetPosX, float targetPosY);
     static float calculateDistance(const Vector2& pos1, const Vector2& pos2);
-
-    void removeKilledEnemies();
+    double calculateTextureAngle();
 };
 
 

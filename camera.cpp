@@ -10,8 +10,8 @@ Camera::Camera() {
 void Camera::setCamera(Player player) {
     int LEVEL_WIDTH = 3840;
     int LEVEL_HEIGHT = 2560;
-    x = (player.getPosX() + Player::DOT_WIDTH / 2 ) - SCREEN_WIDTH / 2;
-    y = (player.getPosY() + Player::DOT_HEIGHT / 2 ) - SCREEN_HEIGHT / 2;
+    x = (player.getPosX() + Player::WIDTH / 2 ) - SCREEN_WIDTH / 2;
+    y = (player.getPosY() + Player::HEIGHT / 2 ) - SCREEN_HEIGHT / 2;
 
     if (x < 0) {
         x = 0;
