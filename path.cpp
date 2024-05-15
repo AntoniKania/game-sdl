@@ -1,7 +1,8 @@
 #include "path.h"
 
-Path::Path(const Map& map) {
+Path::Path(const Map &map, TileType tileType) {
     this->map = map;
+    this->pathTileType = tileType;
     loadPath();
 }
 
@@ -13,7 +14,7 @@ void Path::loadPath() {
     bool firstPathNodeFound = false;
     while (!firstPathNodeFound) {
         for (auto tile : map.tiles) {
-            if (tile.getType() == TileType::ENEMY_PATH) {
+            if (tile.getType() == pathTileType) {
                 auto* newNode = new PathNode{tile, nullptr};
                 firstNode = newNode;
                 currentNode = firstNode;
@@ -50,13 +51,13 @@ Tile Path::getNextPathTail(const Tile& tile, const Tile& previousTile) {
     Tile tileToRight = map.getTileToRight(tile);
     Tile tileBelow = map.getTileBelow(tile);
     Tile tileToLeft = map.getTileToLeft(tile);
-    if (tileAbove != tile && tileAbove.getType() == TileType::ENEMY_PATH && tileAbove != previousTile) {
+    if (tileAbove != tile && tileAbove.getType() == pathTileType && tileAbove != previousTile) {
         return tileAbove;
-    } else if (tileToRight != tile && tileToRight.getType() == TileType::ENEMY_PATH && tileToRight != previousTile) {
+    } else if (tileToRight != tile && tileToRight.getType() == pathTileType && tileToRight != previousTile) {
         return tileToRight;
-    } else if (tileBelow != tile && tileBelow.getType() == TileType::ENEMY_PATH && tileBelow != previousTile) {
+    } else if (tileBelow != tile && tileBelow.getType() == pathTileType && tileBelow != previousTile) {
         return tileBelow;
-    } else if (tileToLeft != tile && tileToLeft.getType() == TileType::ENEMY_PATH && tileToLeft != previousTile) {
+    } else if (tileToLeft != tile && tileToLeft.getType() == pathTileType && tileToLeft != previousTile) {
         return tileToLeft;
     } else {
         return tile;

@@ -5,8 +5,8 @@ BloodPuddleEffect::BloodPuddleEffect(Texture *texture, int x, int y) {
     int textureWidth = 0;
     int textureHeight = 0;
     SDL_QueryTexture(texture->getSDLTexture(), NULL, NULL, &textureWidth, &textureHeight);
-    this->mPosX = x - textureWidth / BLOOD_EFFECT_ANIMATION_FRAMES / 2 + 16;
-    this->mPosY = y - textureHeight / 2 + 16;
+    this->mPosX = x - textureWidth / BLOOD_EFFECT_ANIMATION_FRAMES / 2 + 32;
+    this->mPosY = y - textureHeight / 2 + 32;
     this->clipToRender = 0;
     this->frame = 0;
 
@@ -47,8 +47,8 @@ BloodSpreadEffect::BloodSpreadEffect(Texture *texture, int shooterPosX, int shoo
     int textureHeight = 0;
     SDL_QueryTexture(texture->getSDLTexture(), NULL, NULL, &textureWidth, &textureHeight);
     this->center = SDL_Point{0, textureHeight / 2};
-    this->mPosX = victimPosX + 16;
-    this->mPosY = victimPosY - textureHeight / 2 + 16;
+    this->mPosX = victimPosX + 32;
+    this->mPosY = victimPosY - textureHeight / 2 + 32;
     this->angle = calculateAngle(shooterPosX, shooterPosY, victimPosX, victimPosY);
 }
 

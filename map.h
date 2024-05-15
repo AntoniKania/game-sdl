@@ -12,7 +12,7 @@ public:
     ~Map();
 
     void draw(Camera* camera);
-    void load(Texture* grayTexture, Texture* redTexture, SDL_Renderer* renderer);
+    void load(Texture* groundTexture, Texture* treeTexture);
     std::vector<Tile> getTiles() const;
     Tile getTileAbove(const Tile& tile);
     Tile getTileBelow(const Tile& tile);
@@ -21,11 +21,10 @@ public:
     std::vector<Tile> tiles;
     bool isWallBetweenInStraightLine(const Vector2& startPos, const Vector2& endPos);
     Tile getTile(const int& posX, const int& posY);
-    static const int TILE_SIZE = 32;
+    static const int TILE_SIZE = 64;
 private:
     std::vector<int> tilesMap;
     std::vector<Tile> visibleTiles;
-    SDL_Renderer* renderer;
 };
 
 #endif //GAME_MAP_H

@@ -4,6 +4,7 @@
 #include <SDL2/SDL_image.h>
 #include "texture.h"
 #include "player.h"
+#include "tile.h"
 #include "map.h"
 #include "camera.h"
 #include "enemy.h"
@@ -25,8 +26,8 @@ SDL_Window* gWindow = NULL;
 SDL_Renderer* renderer = NULL;
 
 Texture gDotTexture;
-Texture gGrayTexture;
-Texture gRedTexture;
+Texture gGroundTexture;
+Texture gTreeTexture;
 Texture gEnemyTexture;
 Texture gCursorTexture;
 Texture gBloodPuddleSprite;
@@ -61,8 +62,8 @@ bool init() {
                     printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
                     success = false;
                 }
-                gRedTexture.setRenderer(renderer);
-                gGrayTexture.setRenderer(renderer);
+                gTreeTexture.setRenderer(renderer);
+                gGroundTexture.setRenderer(renderer);
                 gDotTexture.setRenderer(renderer);
                 gEnemyTexture.setRenderer(renderer);
                 gCursorTexture.setRenderer(renderer);
@@ -78,18 +79,18 @@ bool init() {
 bool loadMedia() {
     bool success = true;
 
-    if (!gDotTexture.loadFromFile( "assets/dot.png")) {
-        printf("Failed to load dot bloodPuddleTexture!\n");
+    if (!gDotTexture.loadFromFile( "assets/player.png")) {
+        printf("Failed to load player!\n");
         success = false;
     }
 
-    if (!gGrayTexture.loadFromFile("assets/gray.png")) {
+    if (!gGroundTexture.loadFromFile("assets/ground.png")) {
         printf("Failed to load gray bloodPuddleTexture!\n");
         success = false;
     }
 
-    if (!gRedTexture.loadFromFile("assets/red.png")) {
-        printf("Failed to load red bloodPuddleTexture!\n");
+    if (!gTreeTexture.loadFromFile("assets/tree.png")) {
+        printf("Failed to load tree!\n");
         success = false;
     }
 
@@ -113,15 +114,15 @@ bool loadMedia() {
         success = false;
     }
 
-    map.load(&gGrayTexture, &gRedTexture, renderer);
+    map.load(&gGroundTexture, &gTreeTexture);
 
     return success;
 }
 
 void close() {
     gDotTexture.free();
-    gGrayTexture.free();
-    gRedTexture.free();
+    gGroundTexture.free();
+    gTreeTexture.free();
     gEnemyTexture.free();
     gBloodSpreadTexture.free();
     gBloodPuddleSprite.free();
@@ -148,9 +149,13 @@ int main(int argc, char* args[]) {
             SDL_ShowCursor(0);
 
             BloodEffectCollection bloodEffectCollection = BloodEffectCollection(&gBloodPuddleSprite, &gBloodSpreadTexture);
-            Path pathEnemy1 = Path(map);
+            Path pathEnemy1 = Path(map, TileType::PATH_ENEMY_1);
+            Path pathEnemy2 = Path(map, TileType::PATH_ENEMY_2);
+            Path pathEnemy3 = Path(map, TileType::PATH_ENEMY_3);
             Enemy enemy1 = Enemy(&gEnemyTexture, &map, &pathEnemy1, &bloodEffectCollection);
-            std::vector<Enemy*> enemies = {&enemy1};
+            Enemy enemy2 = Enemy(&gEnemyTexture, &map, &pathEnemy2, &bloodEffectCollection);
+            Enemy enemy3 = Enemy(&gEnemyTexture, &map, &pathEnemy3, &bloodEffectCollection);
+            std::vector<Enemy*> enemies = {&enemy1, &enemy2, &enemy3};
             Player player = Player(&gDotTexture);
             Camera camera;
             Shotgun shotgun = Shotgun(&enemies, &player, map, &camera);

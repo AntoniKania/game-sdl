@@ -1,7 +1,7 @@
 #include "tile.h"
 
-void Tile::render(int x, int y, SDL_Rect* clip) {
-    texture->render(x, y, clip);
+void Tile::render(int x, int y, SDL_Rect* clip, double angle) {
+    texture->render(x, y, clip, angle);
 }
 
 TileType Tile::getType() {

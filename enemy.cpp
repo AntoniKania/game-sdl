@@ -95,7 +95,7 @@ void Enemy::kill(int shooterPosX, int shooterPoxY) {
 }
 
 bool Enemy::canShootPlayer(const Player &player) {
-    if (!player.isAlive) {
+    if (!player.isAlive || !isAlive) {
         return false;
     }
     timer.start();

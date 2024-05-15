@@ -7,14 +7,16 @@
 enum TileType {
     WALL,
     GROUND,
-    ENEMY_PATH
+    PATH_ENEMY_1,
+    PATH_ENEMY_2,
+    PATH_ENEMY_3
 };
 
 class Tile {
 public:
     explicit Tile(Texture* texture, TileType type, int x, int y);
     virtual ~Tile() = default;
-    void render(int x, int y, SDL_Rect* clip = nullptr);
+    void render(int x, int y, SDL_Rect* clip = nullptr, double angle = 0.0f);
     TileType getType();
     int getX() const;
     int getY() const;

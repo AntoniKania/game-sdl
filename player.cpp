@@ -50,7 +50,30 @@ bool Player::isColliding(const std::vector<Tile>& tiles) {
 }
 
 void Player::render(int camX, int camY) {
-    texture->render(mPosX - camX, mPosY - camY);
+    int mouseX, mouseY;
+    SDL_GetMouseState(&mouseX, &mouseY);
+    texture->render(mPosX - camX, mPosY - camY, nullptr, calculateAngle(mouseX + camX, mouseY + camY));
+}
+
+double Player::calculateAngle(int mousePosX, int mousePosY) {
+    if (!isAlive) {
+        return previousAngle;
+    }
+    int dx = mousePosX - mPosX;
+    int dy = mousePosY - mPosY;
+
+    double angleRadians = atan2(dy, dx);
+    double angleDegrees = angleRadians * (180.0 / M_PI);
+
+    while (angleDegrees < 0) {
+        angleDegrees += 360.0;
+    }
+    while (angleDegrees >= 360.0) {
+        angleDegrees -= 360.0;
+    }
+
+    previousAngle = angleDegrees;
+    return angleDegrees;
 }
 
 int Player::getPosX() const {

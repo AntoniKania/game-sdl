@@ -5,7 +5,7 @@
 
 class Path {
 public:
-    explicit Path(const Map& map);
+    explicit Path(const Map& map, TileType tileType);
     struct PathNode {
         Tile tile;
         PathNode* next;
@@ -14,6 +14,7 @@ public:
     void incrementPathNode();
 private:
     void loadPath();
+    TileType pathTileType;
     PathNode* currentPathNode;
     Map map;
 
