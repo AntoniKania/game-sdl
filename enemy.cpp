@@ -17,7 +17,7 @@ Enemy::Enemy(Texture *texture, Map *map, Path *path, BloodEffectCollection *bloo
 }
 
 void Enemy::move(const Player &player) {
-    if (!this->isAlive || !player.isAlive) {
+    if (!this->isAlive) {
         return;
     }
     auto enemyCoordinates = std::make_pair(mPosX + ENEMY_WIDTH / 2,
@@ -89,10 +89,16 @@ void Enemy::moveEnemyTowardPlayer(const std::pair<int, int> &enemyCoordinate, co
     isChasingPlayer = true;
 }
 
+void Enemy::revive() {
+    isAlive = true;
+    isChasingPlayer = false;
+    mPosX = path->getPathNode()->tile.getX();
+    mPosY = path->getPathNode()->tile.getY();
+}
+
 void Enemy::render(int camX, int camY) {
     int clipToRender = getClipToRender();
     SDL_Rect* currentClip = &gSpriteClips[ clipToRender ];
-//    auto point = SDL_Point{ mPosX - camX + ENEMY_WIDTH / 2, mPosY - camY + textTexture->getHeight() / 2};
     texture->render(mPosX - camX, mPosY - camY, currentClip, calculateTextureAngle());
 }
 

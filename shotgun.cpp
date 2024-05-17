@@ -61,7 +61,6 @@ void Shotgun::fire(const Vector2 &ptStart, const Vector2 &ptTarget) {
 
     for (auto enemy : *enemies) {
         if (canKillEnemy(enemy) && enemy->isAlive) {
-            printf("Enemy killed!");
             enemy->kill(shooterPos.x, shooterPos.y);
         }
     }
@@ -97,13 +96,7 @@ float Shotgun::calculateDistance(const Vector2& pos1, const Vector2& pos2) {
 bool Shotgun::isEnemyCloseEnough(Enemy *enemy) {
     Vector2 enemyPos = Vector2(enemy->getPosX(), enemy->getPosY());
     float distance = calculateDistance(shooterPos, enemyPos);
-    bool closeEnough = distance <= SHOOTING_DISTANCE;
-    if (closeEnough) {
-        printf("Enemy close enough!\n Distance: %f\n", distance);
-    } else {
-        printf("Enemy not close enough!\n Distance: %f\n", distance);
-    }
-    return closeEnough;
+    return distance <= SHOOTING_DISTANCE;
 }
 
 void Shotgun::render(int camX, int camY) {

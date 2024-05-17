@@ -23,6 +23,8 @@ bool loadMedia();
 
 void close();
 
+bool isAnyEnemyAlive(std::vector<Enemy*> enemies);
+
 SDL_Window* gWindow = NULL;
 
 SDL_Renderer* renderer = NULL;
@@ -41,6 +43,8 @@ Texture gScoreTextTexture;
 Texture gSemiTransparentTexture;
 TTF_Font* gFont = nullptr;
 SDL_Color blackText = {0, 0, 0, 255 };
+SDL_Color whiteText = {255, 255, 255, 255 };
+Timer gameStartedTimer = Timer();
 
 Map map;
 
@@ -55,7 +59,7 @@ bool init() {
             printf("Warning: Linear bloodPuddleTexture filtering not enabled!");
         }
 
-        gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+        gWindow = SDL_CreateWindow("SDG Project", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
         if (gWindow == NULL) {
             printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
             success = false;
@@ -177,6 +181,23 @@ void close() {
     SDL_Quit();
 }
 
+bool isAnyEnemyAlive(std::vector<Enemy*> enemies) {
+    for (auto enemy : enemies) {
+        if (enemy->isAlive) {
+            return true;
+        }
+    }
+    return false;
+}
+
+int calculateScore(float timerTicksInSeconds) {
+    int maxScore = 10000;
+    if (timerTicksInSeconds <= 0) {
+        return maxScore;
+    }
+    return maxScore / timerTicksInSeconds;
+}
+
 int main(int argc, char* args[]) {
     if (!init()) {
         printf("Failed to initialize!\n");
@@ -186,6 +207,7 @@ int main(int argc, char* args[]) {
         } else {
             bool quit = false;
             bool gameStarted = false;
+            bool gameFinished = false;
 
             SDL_Event e;
             SDL_ShowCursor(0);
@@ -203,15 +225,18 @@ int main(int argc, char* args[]) {
             Shotgun shotgun = Shotgun(&gShotgunSpreadTexture, &enemies, &player, map, &camera);
             auto cursor = Cursor(&gCursorTexture);
             auto startButton = Button(&gStartGameTextTexture, SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 - 50, 500, 100);
+            auto restartButton = Button(&gRestartTextTexture, SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 + 100, 500, 100);
 
             while (!quit) {
                 while (SDL_PollEvent( &e) != 0) {
                     if (e.type == SDL_QUIT) {
                         quit = true;
                     }
-                    if (gameStarted) {
+                    if (gameStarted && !gameFinished) {
                         player.handleEvent(e);
                         shotgun.handleEvent(e);
+                    } else if (gameFinished) {
+                        restartButton.handleEvent(e);
                     } else {
                         startButton.handleEvent(e);
                     }
@@ -235,16 +260,41 @@ int main(int argc, char* args[]) {
                 player.render(camera.x, camera.y);
                 shotgun.render(camera.x, camera.y);
 
-//                if (!gScoreTextTexture.loadFromRenderedText("Restart", blackText, gFont)) {
-//                    printf( "Unable to load gStartGameTextTexture!\n" );
-//                }
-
+                if (!isAnyEnemyAlive(enemies)) {
+                    gameFinished = true;
+                    gameStartedTimer.pause();
+                }
+                if (gameFinished) {
+                    player.kill();
+                    gSemiTransparentTexture.render(0, 0);
+                    int score = calculateScore(gameStartedTimer.getTicks() / 1000.0f);
+                    if (!gScoreTextTexture.loadFromRenderedText("SCORE:" + std::to_string(score), whiteText, gFont)) {
+                        printf( "Unable to load gStartGameTextTexture!\n" );
+                    }
+                    gScoreTextTexture.render(SCREEN_WIDTH / 2 - (gScoreTextTexture.getWidth() / 2),
+                                             SCREEN_HEIGHT / 2 - (gScoreTextTexture.getHeight() / 2) - 100);
+                    restartButton.render();
+                    if (restartButton.isClicked()) {
+                        player.revive();
+                        for (auto enemy : enemies) {
+                            enemy->revive();
+                        }
+                        bloodEffectCollection.bloodEffects.clear();
+                        restartButton.reset();
+                        gameStartedTimer.stop();
+                        gameStartedTimer.start();
+                        gameFinished = false;
+                    }
+                }
                 if (!gameStarted) {
                     gSemiTransparentTexture.render(0, 0);
                     startButton.render();
                     if (startButton.isClicked()) {
+                        player.isAlive = true;
                         gameStarted = true;
                         startButton.reset();
+                        gameStartedTimer.stop();
+                        gameStartedTimer.start();
                     }
                 }
 

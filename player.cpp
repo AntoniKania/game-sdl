@@ -101,7 +101,7 @@ Player::Player(Texture *texture) {
 
     mVelX = 0;
     mVelY = 0;
-    isAlive = true;
+    isAlive = false;
 }
 
 void Player::kill(BloodEffectCollection *bloodEffectCollection, int shooterPosX, int shooterPosY) {
@@ -109,4 +109,10 @@ void Player::kill(BloodEffectCollection *bloodEffectCollection, int shooterPosX,
     mVelY = 0;
     isAlive = false;
     bloodEffectCollection->createBloodEffects(shooterPosX, shooterPosY, mPosX, mPosY);
+}
+
+void Player::kill() {
+    mVelX = 0;
+    mVelY = 0;
+    isAlive = false;
 }

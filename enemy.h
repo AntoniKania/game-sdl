@@ -18,6 +18,7 @@ public:
     bool canShootPlayer(const Player &player);
     void move(const Player &player);
     void kill(int shooterPosX, int shooterPoxY);
+    void revive();
     int getPosX();
     int getPosY();
 private:

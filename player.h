@@ -20,7 +20,9 @@ public:
     void handleEvent(SDL_Event& e);
     void move(const std::vector<Tile>& tiles, const int& screenWidth, const int& screenHeight);
     void kill(BloodEffectCollection *bloodEffectCollection, int shooterPosX, int shooterPosY);
+    void kill();
     void render(int camX, int camY);
+    void revive();
     bool isAlive;
 
     int getPosX() const;
@@ -33,8 +35,6 @@ private:
     Texture* texture;
     bool isColliding(const std::vector<Tile>& tiles);
     double calculateAngle(int mousePosX, int mousePosY);
-
-    void revive();
 };
 
 #endif //GAME_PLAYER_H
