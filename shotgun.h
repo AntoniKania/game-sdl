@@ -16,10 +16,14 @@ public:
     void handleEvent(SDL_Event& e);
     void fire(const Vector2 &ptStart, const Vector2 &ptTarget);
     void render(int camX, int camY);
+    void renderEnemyShooting(int camX, int camY, Enemy *enemy);
+    void markEnemyThatShotPlayer(Enemy *enemy);
 private:
     Camera* camera;
     Texture* texture;
     Timer afterShotTimer;
+    Timer afterShotTimerForEnemy;
+    Enemy *enemyThatShotPlayer;
     Map map;
     float spreadAngle;
     float targetAngle;

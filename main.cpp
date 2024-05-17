@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <SDL2/SDL.h>
+#include <SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 #include "texture.h"
 #include "player.h"
@@ -11,9 +12,10 @@
 #include "shotgun.h"
 #include "cursor.h"
 #include "blood_effect.h"
+#include "button.h"
 
-const int SCREEN_WIDTH = 960;
-const int SCREEN_HEIGHT = 640;
+const int SCREEN_WIDTH = 1400;
+const int SCREEN_HEIGHT = 800;
 
 bool init();
 
@@ -33,6 +35,13 @@ Texture gCursorTexture;
 Texture gBloodPuddleSprite;
 Texture gBloodSpreadTexture;
 Texture gShotgunSpreadTexture;
+Texture gRestartTextTexture;
+Texture gStartGameTextTexture;
+Texture gScoreTextTexture;
+Texture gSemiTransparentTexture;
+TTF_Font* gFont = nullptr;
+SDL_Color blackText = {0, 0, 0, 255 };
+
 Map map;
 
 bool init() {
@@ -63,6 +72,10 @@ bool init() {
                     printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
                     success = false;
                 }
+                if (TTF_Init() == -1) {
+                    printf( "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
+                    success = false;
+                }
                 gTreeTexture.setRenderer(renderer);
                 gGroundTexture.setRenderer(renderer);
                 gDotTexture.setRenderer(renderer);
@@ -71,6 +84,10 @@ bool init() {
                 gBloodPuddleSprite.setRenderer(renderer);
                 gBloodSpreadTexture.setRenderer(renderer);
                 gShotgunSpreadTexture.setRenderer(renderer);
+                gStartGameTextTexture.setRenderer(renderer);
+                gRestartTextTexture.setRenderer(renderer);
+                gScoreTextTexture.setRenderer(renderer);
+                gSemiTransparentTexture.setRenderer(renderer);
             }
         }
     }
@@ -80,6 +97,17 @@ bool init() {
 
 bool loadMedia() {
     bool success = true;
+
+    gFont = TTF_OpenFont("assets/quadriana.ttf", 80);
+
+    if (!gStartGameTextTexture.loadFromRenderedText("Start", blackText, gFont)) {
+        printf( "Unable to load gStartGameTextTexture!\n" );
+    }
+
+    if (!gRestartTextTexture.loadFromRenderedText("Restart", blackText, gFont)) {
+        printf( "Unable to load gRestartTextTexture!\n" );
+    }
+
 
     if (!gDotTexture.loadFromFile( "assets/player.png")) {
         printf("Failed to load player!\n");
@@ -121,6 +149,11 @@ bool loadMedia() {
         success = false;
     }
 
+    if (!gSemiTransparentTexture.createSemiTransparentTexture(SCREEN_WIDTH, SCREEN_HEIGHT, 178)) {
+        printf("Failed to load gShotgunSpreadTexture!\n");
+        success = false;
+    }
+
     map.load(&gGroundTexture, &gTreeTexture);
 
     return success;
@@ -152,6 +185,7 @@ int main(int argc, char* args[]) {
             printf("Failed to load media!\n");
         } else {
             bool quit = false;
+            bool gameStarted = false;
 
             SDL_Event e;
             SDL_ShowCursor(0);
@@ -168,15 +202,19 @@ int main(int argc, char* args[]) {
             Camera camera;
             Shotgun shotgun = Shotgun(&gShotgunSpreadTexture, &enemies, &player, map, &camera);
             auto cursor = Cursor(&gCursorTexture);
+            auto startButton = Button(&gStartGameTextTexture, SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 - 50, 500, 100);
 
             while (!quit) {
                 while (SDL_PollEvent( &e) != 0) {
                     if (e.type == SDL_QUIT) {
                         quit = true;
                     }
-
-                    player.handleEvent(e);
-                    shotgun.handleEvent(e);
+                    if (gameStarted) {
+                        player.handleEvent(e);
+                        shotgun.handleEvent(e);
+                    } else {
+                        startButton.handleEvent(e);
+                    }
                 }
                 SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
                 SDL_RenderClear(renderer);
@@ -188,12 +226,27 @@ int main(int argc, char* args[]) {
                 for (auto enemy : enemies) {
                     enemy->move(player);
                     enemy->render(camera.x, camera.y);
+                    shotgun.renderEnemyShooting(camera.x, camera.y, enemy);
                     if (enemy->canShootPlayer(player)) {
                         player.kill(&bloodEffectCollection, enemy->getPosX(), enemy->getPosY());
+                        shotgun.markEnemyThatShotPlayer(enemy);
                     }
                 }
                 player.render(camera.x, camera.y);
                 shotgun.render(camera.x, camera.y);
+
+//                if (!gScoreTextTexture.loadFromRenderedText("Restart", blackText, gFont)) {
+//                    printf( "Unable to load gStartGameTextTexture!\n" );
+//                }
+
+                if (!gameStarted) {
+                    gSemiTransparentTexture.render(0, 0);
+                    startButton.render();
+                    if (startButton.isClicked()) {
+                        gameStarted = true;
+                        startButton.reset();
+                    }
+                }
 
                 cursor.render();
                 SDL_RenderPresent(renderer);

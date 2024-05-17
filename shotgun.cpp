@@ -107,12 +107,35 @@ bool Shotgun::isEnemyCloseEnough(Enemy *enemy) {
 }
 
 void Shotgun::render(int camX, int camY) {
-    if (afterShotTimer.getTicks() / 1000.0f == 0 || afterShotTimer.getTicks() / 1000.0f > 0.1) {
+    if (afterShotTimer.getTicks() / 1000.0f == 0 || afterShotTimer.getTicks() / 1000.0f > 0.05) {
         return;
     } else {
         auto point = SDL_Point{0, 64};
-        texture->render(player->getPosX() + player->WIDTH / 2 - camX, player->getPosY() + player->HEIGHT / 2 - camY - 64, nullptr, calculateTextureAngle(), &point);
+        texture->render(player->getPosX() + player->WIDTH / 2 - camX, player->getPosY() + player->HEIGHT / 2 - camY - 64,
+                        nullptr, calculateTextureAngle(), &point);
     }
+}
+
+void Shotgun::renderEnemyShooting(int camX, int camY, Enemy *enemy) {
+    if (enemy != enemyThatShotPlayer) {
+        return;
+    }
+    if (afterShotTimerForEnemy.getTicks() / 1000.0f > 0.1) {
+        afterShotTimerForEnemy.stop();
+        enemyThatShotPlayer = nullptr;
+        return;
+    } else {
+        auto point = SDL_Point{0, 64};
+        texture->render(enemy->getPosX() + player->WIDTH / 2 - camX, enemy->getPosY() + player->HEIGHT / 2 - camY - 64,
+                        nullptr, calculateTextureAngle(), &point, SDL_RendererFlip::SDL_FLIP_VERTICAL);
+    }
+}
+
+void Shotgun::markEnemyThatShotPlayer(Enemy *enemy) {
+    enemyThatShotPlayer = enemy;
+    shooterPos = Vector2(enemy->getPosX(), enemy->getPosY());
+    targetPos = Vector2(player->getPosX() + player->HEIGHT / 2, player->getPosY() + player->WIDTH / 2);
+    afterShotTimerForEnemy.start();
 }
 
 double Shotgun::calculateTextureAngle() {

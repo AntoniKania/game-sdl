@@ -3,8 +3,8 @@
 Camera::Camera() {
     x = 0;
     y = 0;
-    SCREEN_HEIGHT = 640;
-    SCREEN_WIDTH = 960;
+    SCREEN_HEIGHT = 800;
+    SCREEN_WIDTH = 1400;
 }
 
 void Camera::setCamera(Player player) {

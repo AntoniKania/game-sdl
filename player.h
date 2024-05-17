@@ -11,7 +11,8 @@ class Player {
 public:
     static const int WIDTH = 64;
     static const int HEIGHT = 64;
-
+    static const int START_POS_X = 20;
+    static const int START_POS_Y = 400;
     static const int DOT_VEL = 10;
 
     explicit Player(Texture* texture);
@@ -32,6 +33,8 @@ private:
     Texture* texture;
     bool isColliding(const std::vector<Tile>& tiles);
     double calculateAngle(int mousePosX, int mousePosY);
+
+    void revive();
 };
 
 #endif //GAME_PLAYER_H

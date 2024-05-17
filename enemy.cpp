@@ -92,7 +92,7 @@ void Enemy::moveEnemyTowardPlayer(const std::pair<int, int> &enemyCoordinate, co
 void Enemy::render(int camX, int camY) {
     int clipToRender = getClipToRender();
     SDL_Rect* currentClip = &gSpriteClips[ clipToRender ];
-//    auto point = SDL_Point{ mPosX - camX + ENEMY_WIDTH / 2, mPosY - camY + texture->getHeight() / 2};
+//    auto point = SDL_Point{ mPosX - camX + ENEMY_WIDTH / 2, mPosY - camY + textTexture->getHeight() / 2};
     texture->render(mPosX - camX, mPosY - camY, currentClip, calculateTextureAngle());
 }
 
@@ -126,7 +126,8 @@ bool Enemy::canShootPlayer(const Player &player) {
         return false;
     }
 
-    if (shootDelayTimer.getTicks() / 1000.0f > 2) {
+    if (shootDelayTimer.getTicks() / 1000.0f > 1.7) {
+        shootDelayTimer.stop();
         return true;
     } else {
         return false;

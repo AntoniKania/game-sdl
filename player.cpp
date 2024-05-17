@@ -3,25 +3,35 @@
 
 void Player::handleEvent(SDL_Event& e) {
     if (!isAlive) {
-        return;
-    }
-    if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
-        switch(e.key.keysym.sym) {
-            case SDLK_w: mVelY -= DOT_VEL; break;
-            case SDLK_s: mVelY += DOT_VEL; break;
-            case SDLK_a: mVelX -= DOT_VEL; break;
-            case SDLK_d: mVelX += DOT_VEL; break;
+        if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
+            if (e.key.keysym.sym == SDLK_SPACE) {
+                revive();
+            }
+        }
+    } else {
+        if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
+            switch(e.key.keysym.sym) {
+                case SDLK_w: mVelY -= DOT_VEL; break;
+                case SDLK_s: mVelY += DOT_VEL; break;
+                case SDLK_a: mVelX -= DOT_VEL; break;
+                case SDLK_d: mVelX += DOT_VEL; break;
+            }
+        } else if (e.type == SDL_KEYUP && e.key.repeat == 0) {
+            switch(e.key.keysym.sym)
+            {
+                case SDLK_w: mVelY += DOT_VEL; break;
+                case SDLK_s: mVelY -= DOT_VEL; break;
+                case SDLK_a: mVelX += DOT_VEL; break;
+                case SDLK_d: mVelX -= DOT_VEL; break;
+            }
         }
     }
-    else if (e.type == SDL_KEYUP && e.key.repeat == 0) {
-        switch(e.key.keysym.sym)
-        {
-            case SDLK_w: mVelY += DOT_VEL; break;
-            case SDLK_s: mVelY -= DOT_VEL; break;
-            case SDLK_a: mVelX += DOT_VEL; break;
-            case SDLK_d: mVelX -= DOT_VEL; break;
-        }
-    }
+}
+
+void Player::revive() {
+    isAlive = true;
+    mPosX = START_POS_X;
+    mPosY = START_POS_Y;
 }
 
 void Player::move(const std::vector<Tile>& tiles, const int& screenWidth, const int& screenHeight) {
@@ -86,8 +96,8 @@ int Player::getPosY() const {
 
 Player::Player(Texture *texture) {
     this->texture = texture;
-    mPosX = 0;
-    mPosY = 0;
+    mPosX = START_POS_X;
+    mPosY = START_POS_Y;
 
     mVelX = 0;
     mVelY = 0;
