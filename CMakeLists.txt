@@ -1,7 +1,13 @@
-cmake_minimum_required(VERSION 3.26)
-
+cmake_minimum_required(VERSION 3.24)
 project(game)
-add_executable(game main.cpp
+
+set(CMAKE_CXX_STANDARD 17)
+
+set(SDL2_INCLUDE_DIR "C:\\LibSDL\\VC\\SDL2-2.26.3\\include")
+set(SDL2_LIB_DIR "C:\\LibSDL\\VC\\SDL2-2.26.3\\lib\\x64")
+
+include_directories(${SDL2_INCLUDE_DIR})
+add_executable(${PROJECT_NAME} main.cpp
         texture.cpp
         texture.h
         tile.cpp
@@ -29,16 +35,5 @@ add_executable(game main.cpp
         timer.cpp
         timer.h
         button.cpp
-        button.h
-)
-
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
-
-INCLUDE(FindPkgConfig)
-
-PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
-PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
-PKG_SEARCH_MODULE(SDL2TTF REQUIRED SDL2_ttf>=2.0.0)
-
-INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2IMAGE_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIRS})
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES} ${SDL2TTF_LIBRARIES})
+        button.h)
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIB_DIR}/SDL2.lib ${SDL2_LIB_DIR}/SDL2main.lib)
