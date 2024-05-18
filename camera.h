@@ -1,7 +1,7 @@
 #ifndef GAME_CAMERA_H
 #define GAME_CAMERA_H
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include "player.h"
 
 class Camera {

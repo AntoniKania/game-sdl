@@ -1,7 +1,7 @@
 #ifndef GAME_COLLISION_H
 #define GAME_COLLISION_H
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 class Collision
 {

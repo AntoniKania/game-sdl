@@ -4,7 +4,7 @@
 #include "tile.h"
 #include "vector2.h"
 #include "blood_effect.h"
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <SDL2/SDL_image.h>
 
 class Player {

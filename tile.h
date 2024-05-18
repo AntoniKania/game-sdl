@@ -1,7 +1,7 @@
 #ifndef GAME_TILE_H
 #define GAME_TILE_H
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include "texture.h"
 
 enum TileType {
