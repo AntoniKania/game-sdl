@@ -9,7 +9,11 @@ enum TileType {
     GROUND,
     PATH_ENEMY_1,
     PATH_ENEMY_2,
-    PATH_ENEMY_3
+    PATH_ENEMY_3,
+    PATH_ENEMY_4,
+    PATH_ENEMY_5,
+    PATH_ENEMY_6,
+    PATH_ENEMY_7
 };
 
 class Tile {
