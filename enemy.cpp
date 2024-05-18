@@ -17,7 +17,7 @@ Enemy::Enemy(Texture *texture, Map *map, Path *path, BloodEffectCollection *bloo
 }
 
 void Enemy::move(const Player &player) {
-    if (!this->isAlive) {
+    if (!this->isAlive || player.gotKilled()) {
         return;
     }
     auto enemyCoordinates = std::make_pair(mPosX + ENEMY_WIDTH / 2,

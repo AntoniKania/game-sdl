@@ -1,6 +1,17 @@
 #include "player.h"
 #include "collision.h"
 
+Player::Player(Texture *texture) {
+    this->texture = texture;
+    mPosX = START_POS_X;
+    mPosY = START_POS_Y;
+
+    mVelX = 0;
+    mVelY = 0;
+    isAlive = false;
+    killed = false;
+}
+
 void Player::handleEvent(SDL_Event& e) {
     if (!isAlive) {
         if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
@@ -29,6 +40,7 @@ void Player::handleEvent(SDL_Event& e) {
 }
 
 void Player::revive() {
+    killed = false;
     isAlive = true;
     mPosX = START_POS_X;
     mPosY = START_POS_Y;
@@ -94,20 +106,11 @@ int Player::getPosY() const {
     return mPosY;
 }
 
-Player::Player(Texture *texture) {
-    this->texture = texture;
-    mPosX = START_POS_X;
-    mPosY = START_POS_Y;
-
-    mVelX = 0;
-    mVelY = 0;
-    isAlive = false;
-}
-
 void Player::kill(BloodEffectCollection *bloodEffectCollection, int shooterPosX, int shooterPosY) {
     mVelX = 0;
     mVelY = 0;
     isAlive = false;
+    killed = true;
     bloodEffectCollection->createBloodEffects(shooterPosX, shooterPosY, mPosX, mPosY);
 }
 
@@ -115,4 +118,8 @@ void Player::kill() {
     mVelX = 0;
     mVelY = 0;
     isAlive = false;
+}
+
+bool Player::gotKilled() const {
+    return killed;
 }

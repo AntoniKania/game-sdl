@@ -21,6 +21,7 @@ public:
     void move(const std::vector<Tile>& tiles, const int& screenWidth, const int& screenHeight);
     void kill(BloodEffectCollection *bloodEffectCollection, int shooterPosX, int shooterPosY);
     void kill();
+    bool gotKilled() const;
     void render(int camX, int camY);
     void revive();
     bool isAlive;
@@ -33,6 +34,7 @@ private:
     int mVelX, mVelY;
     double previousAngle;
     Texture* texture;
+    bool killed;
     bool isColliding(const std::vector<Tile>& tiles);
     double calculateAngle(int mousePosX, int mousePosY);
 };
